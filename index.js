@@ -1,15 +1,11 @@
 import { emitKeypressEvents } from 'readline';
-import terminalImage from 'terminal-image';
-//import rl from 'readline-sync';
+import chalk from 'chalk';
+import emoji from 'node-emoji';
 
 const { stdin, stdout } = process;
 
-// ==================== CONSTANTS ====================
-
-const TICK_TIMEOUT = 150;
-
 const BOX = {
-    TOP_LEFT_CORNER: '\u250C',
+    TOP_LEFT_CORNER: chalk.bgGrey('\u250C'),
     TOP_RIGHT_CORNER: '\u2510',
     BOTTOM_LEFT_CORNER: '\u2514',
     BOTTOM_RIGHT_CORNER: '\u2518',
@@ -17,7 +13,14 @@ const BOX = {
     VERTICAL_LINE: '\u2502',
 };
 
-const EdenChar = 'D';
+const g = chalk.bgGreen(' ')
+const w = chalk.blue('\u2592')
+const r = chalk.bgGrey.yellow('\u2504')
+const t = chalk.bgGrey.black('\u2594')
+const b = chalk.bgGrey.black('\u2581')
+
+const edenChar = 'D';
+//const edenChar = emoji.get('dog2')
 
 // ==================== CLI ====================
 //const { columns, rows } = stdout;
@@ -34,6 +37,7 @@ const resizeWindow = () => console.log('\x1b[4;40;100t');
 const output = data => stdout.write(data);
 screenSize();
 resizeWindow();
+
 const fillPoint = (r, c, char) => {
     cursorTo(r, c);
     output(char);
@@ -41,9 +45,8 @@ const fillPoint = (r, c, char) => {
 
 const clearPoints = (a, b) => fillPoint(a, b, ' ');
 
-// ==================== BUSINESS LOGIC ====================
 
-const edenLocation = [5, 10];
+const edenLocation = [10, 10];
 
 const drawDog = () => {
     let edenImage = [
@@ -63,16 +66,42 @@ const drawDog = () => {
 }
 const drawMap = () => {
     let map =
-        ['0____',
-            '1hhhhh     ssss\n',
-            '2hhhhh     ssss\n',
-            '3grass stret   \n',
-            '4______'
+        [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t],
+        [r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
+        [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w]
         ]
-    for (let x = 2; x <= map.length; x++) {
-        cursorTo(x, 2)
-        output(map[x - 1])
+    for (let x = 0; x < map.length; x++) {
+        for (let i = 0; i < map[0].length; i++) {
+            cursorTo(x + 2, i + 2)
+            output(map[x][i])
+        }
     }
+}
+
+const drawActions = () => {
+    cursorTo(17, 56);
+    output('[^]')
+    cursorTo(18, 53);
+    output('[<][V][>]')
+    cursorTo(19, 52)
+    output('Move Using ')
+    cursorTo(20, 52)
+    output('Arrow Keys')
 }
 
 const drawBoard = () => {
@@ -128,28 +157,28 @@ stdin.on('keypress', (str, key) => {
             if (edenLocation[0] > 2) {
                 edenLocation[0]--
             }
-            fillPoint(...edenLocation, 'D')
+            fillPoint(...edenLocation, edenChar)
             break;
         case 'right':
             clearPoints(...edenLocation)
             if (edenLocation[1] < columns - 1) {
                 edenLocation[1]++
             }
-            fillPoint(...edenLocation, 'D')
+            fillPoint(...edenLocation, edenChar)
             break;
         case 'down':
             clearPoints(...edenLocation)
             if (edenLocation[0] < rows - 1) {
                 edenLocation[0]++
             }
-            fillPoint(...edenLocation, 'D')
+            fillPoint(...edenLocation, edenChar)
             break;
         case 'left':
             clearPoints(...edenLocation)
             if (edenLocation[1] > 2) {
                 edenLocation[1]--
             }
-            fillPoint(...edenLocation, 'D')
+            fillPoint(...edenLocation, edenChar)
             break
     }
 });
@@ -166,21 +195,21 @@ emitKeypressEvents(stdin);
 stdin.setRawMode(true);
 stdin.setEncoding('utf8');
 
-
 hideCursor();
+
 console.log(rows, ' ', columns)
 drawBoard();
 drawMap();
-drawDog();
-fillPoint(...edenLocation, 'D')
-let play = true;
+drawActions();
+//drawDog();
+
+//let play = true;
 //while (play === true) {
-setTimeout(function () { clearPoints(...edenLocation) }, 3000)
-setTimeout(function () { fillPoint(5, 20, 'D'); }, 6000)
-    // key = rl.keyIn('', { hideEchoBack: true, mask: '', limit: 'zx ' });
-    // if (key === 'z') { if (value > MIN) { value--; } }
-    // else if (key === 'x') { if (value < MAX) { value++; } }
-    // else { break; }
+
+// key = rl.keyIn('', { hideEchoBack: true, mask: '', limit: 'zx ' });
+// if (key === 'z') { if (value > MIN) { value--; } }
+// else if (key === 'x') { if (value < MAX) { value++; } }
+// else { break; }
 //}
 //setupGame();
 
@@ -201,6 +230,3 @@ setTimeout(function () { fillPoint(5, 20, 'D'); }, 6000)
 //   _,-' ,'`-__; '--.
 //  (_/'~~      ''''(;
 
-
-//    [^]
-// [<][V][>]
