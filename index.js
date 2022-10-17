@@ -1,6 +1,7 @@
 import { emitKeypressEvents } from 'readline';
 import chalk from 'chalk';
 import emoji from 'node-emoji';
+//import emojiRegex from 'emoji-regex';
 
 const { stdin, stdout } = process;
 
@@ -20,8 +21,27 @@ const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
 
 const edenChar = 'D';
-//const edenChar = emoji.get('dog2')
-
+//const edenChar = emoji.get('cat')
+let map =
+    [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t],
+    [r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
+    [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w, w]
+    ]
 // ==================== CLI ====================
 //const { columns, rows } = stdout;
 let columns = 50
@@ -32,11 +52,11 @@ const moveCursor = (h, v) => stdout.moveCursor(h, v);
 const clearScreen = () => stdout.write('\x1b[2J');
 const showCursor = () => stdout.write('\x1b[?25h');
 const hideCursor = () => stdout.write('\x1b[?25l');
-const screenSize = () => stdout.write('\x1b[8;99999;99999t')
-const resizeWindow = () => console.log('\x1b[4;40;100t');
+//const screenSize = () => stdout.write('\x1b[8;99999;99999t')
+//const resizeWindow = () => console.log('\x1b[4;40;100t');
 const output = data => stdout.write(data);
-screenSize();
-resizeWindow();
+// screenSize();
+// resizeWindow();
 
 const fillPoint = (r, c, char) => {
     cursorTo(r, c);
@@ -45,6 +65,12 @@ const fillPoint = (r, c, char) => {
 
 const clearPoints = (a, b) => fillPoint(a, b, ' ');
 
+const fillPointMap = (r, c, char) => {
+    cursorTo(r + 2, c + 2);
+    output(char);
+};
+
+const clearPointsMap = (a, b) => fillPointMap(a, b, ' ');
 
 const edenLocation = [10, 10];
 
@@ -64,31 +90,11 @@ const drawDog = () => {
         output(edenImage[x - 2])
     }
 }
-const drawMap = () => {
-    let map =
-        [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t],
-        [r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
-        [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-        [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w]
-        ]
+const drawMap = (map) => {
+
     for (let x = 0; x < map.length; x++) {
         for (let i = 0; i < map[0].length; i++) {
-            cursorTo(x + 2, i + 2)
-            output(map[x][i])
+            fillPointMap(x, i, map[x][i])
         }
     }
 }
@@ -153,32 +159,32 @@ stdin.on('keypress', (str, key) => {
 
     switch (key.name) {
         case 'up':
-            clearPoints(...edenLocation)
-            if (edenLocation[0] > 2) {
+            fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
+            if (edenLocation[0] > 0) {
                 edenLocation[0]--
             }
-            fillPoint(...edenLocation, edenChar)
+            fillPointMap(...edenLocation, edenChar)
             break;
         case 'right':
-            clearPoints(...edenLocation)
-            if (edenLocation[1] < columns - 1) {
+            fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
+            if (edenLocation[1] < map[0].length - 1) {
                 edenLocation[1]++
             }
-            fillPoint(...edenLocation, edenChar)
+            fillPointMap(...edenLocation, edenChar)
             break;
         case 'down':
-            clearPoints(...edenLocation)
-            if (edenLocation[0] < rows - 1) {
+            fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
+            if (edenLocation[0] < map.length - 1) {
                 edenLocation[0]++
             }
-            fillPoint(...edenLocation, edenChar)
+            fillPointMap(...edenLocation, edenChar)
             break;
         case 'left':
-            clearPoints(...edenLocation)
-            if (edenLocation[1] > 2) {
+            fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
+            if (edenLocation[1] > 0) {
                 edenLocation[1]--
             }
-            fillPoint(...edenLocation, edenChar)
+            fillPointMap(...edenLocation, edenChar)
             break
     }
 });
@@ -198,8 +204,11 @@ stdin.setEncoding('utf8');
 hideCursor();
 
 console.log(rows, ' ', columns)
+console.log('12')
+console.log('🐕'.length)
 drawBoard();
-drawMap();
+drawMap(map);
+fillPointMap(...edenLocation, edenChar)
 drawActions();
 //drawDog();
 

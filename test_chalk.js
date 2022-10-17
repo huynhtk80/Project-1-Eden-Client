@@ -10,3 +10,13 @@ console.log(error('Error!'));
 console.log(warning('Warning!'));
 console.log(testcolour('Test Hex Colour!'))
 console.log(somethingpink('Test Hex Colour!'))
+let text = " x "
+let mon = "   "
+let des = '   '
+let viewM = true;
+let ViewD = false
+if (viewM == true)
+    mon = "^^^"
+console.log(`${mon}|${text}|${des}|
+------------
+   |   |   |`)
