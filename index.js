@@ -1,4 +1,5 @@
 import { emitKeypressEvents } from 'readline';
+import { locCompare, printCurrentActions } from './event.js';
 import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame } from './map.js';
 
 const { stdin, stdout } = process;
@@ -26,6 +27,8 @@ stdin.on('keypress', (str, key) => {
             moveLeft();
             break
     }
+    locCompare();
+    printCurrentActions();
 });
 
 // ==================== MAIN THREAD ====================

@@ -16,10 +16,12 @@ const r = chalk.bgGrey.yellow('\u2504')
 const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
 
-const edenChar = 'D';
-const edenLocation = [10, 10];
+export const edenObj = {
+    icon: 'D',
+    Location: [10, 10],
+}
 
-const mapObjects = [
+export const mapObjects = [
     {
         name: "grass",
         icon: [g],
@@ -29,11 +31,18 @@ const mapObjects = [
         name: "road",
         icon: [r, t, b],
         actions: ['smell', 'bark', 'run away']
+    },
+
+    {
+        name: "water",
+        icon: [w],
+        actions: ['drink', 'bark', 'swim']
     }
+
 ]
 
 
-const map =
+export const map =
     [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
@@ -107,16 +116,16 @@ export const initGame = () => {
     drawBoard();
     drawMap();
     drawActions();
-    fillPointMap(...edenLocation, edenChar)
+    fillPointMap(...edenObj.Location, edenObj.icon)
 }
 export const drawActions = () => {
-    cursorTo(17, 56);
+    cursorTo(16, 56);
     output('[^]')
-    cursorTo(18, 53);
+    cursorTo(17, 53);
     output('[<][V][>]')
-    cursorTo(19, 52)
+    cursorTo(18, 52)
     output('Move Using ')
-    cursorTo(20, 52)
+    cursorTo(19, 52)
     output('Arrow Keys')
 }
 
@@ -159,38 +168,38 @@ export const drawBoard = () => {
 };
 
 export const moveUp = () => {
-    fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
-    if (edenLocation[0] > 0) {
-        edenLocation[0]--
+    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
+    if (edenObj.Location[0] > 0) {
+        edenObj.Location[0]--
     }
-    fillPointMap(...edenLocation, edenChar)
+    fillPointMap(...edenObj.Location, edenObj.icon)
 
 }
 
 export const moveRight = () => {
-    fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
-    if (edenLocation[1] < map[0].length - 1) {
-        edenLocation[1]++
+    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
+    if (edenObj.Location[1] < map[0].length - 1) {
+        edenObj.Location[1]++
     }
-    fillPointMap(...edenLocation, edenChar)
+    fillPointMap(...edenObj.Location, edenObj.icon)
 
 }
 
 export const moveDown = () => {
-    fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
-    if (edenLocation[0] < map.length - 1) {
-        edenLocation[0]++
+    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
+    if (edenObj.Location[0] < map.length - 1) {
+        edenObj.Location[0]++
     }
-    fillPointMap(...edenLocation, edenChar)
+    fillPointMap(...edenObj.Location, edenObj.icon)
 
 }
 
 export const moveLeft = () => {
-    fillPointMap(...edenLocation, map[edenLocation[0]][edenLocation[1]])
-    if (edenLocation[1] > 0) {
-        edenLocation[1]--
+    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
+    if (edenObj.Location[1] > 0) {
+        edenObj.Location[1]--
     }
-    fillPointMap(...edenLocation, edenChar)
+    fillPointMap(...edenObj.Location, edenObj.icon)
 
 }
 
