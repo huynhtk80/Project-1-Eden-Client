@@ -1,11 +1,11 @@
 import express from "express"
-import { router as sandwichRouter } from './routes/sandwiches.js'
+import { router as datasetRouter } from './routes/datasets.js'
 
 const app = express();
 const PORT = 4001;
 app.use(express.json());
 
-app.use('/sandwiches', sandwichRouter)
+app.use('/data', datasetRouter)
 
 
 app.listen(PORT, () => {

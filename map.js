@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { locCompare, printCurrentActions } from './event.js';
 const { stdin, stdout } = process;
 
 const BOX = {
@@ -15,11 +16,30 @@ const w = chalk.blue('\u2592')
 const r = chalk.bgGrey.yellow('\u2504')
 const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
+const h = chalk.bgYellow(' ')
 
 export const edenObj = {
     icon: 'D',
+    name: 'Eden',
     Location: [10, 10],
+    locx: 15,
+    locy: 15,
+    CurStamina: 100,
+    maxStamina: 100,
+    hunger: 0,
+    thirsty: 0,
+    bladder: 0,
+    experience: 0,
+    level: 1
 }
+
+export const charObjects = [
+    {
+        icon: 'p',
+        name: "Puppy"
+
+    }
+]
 
 export const mapObjects = [
     {
@@ -37,6 +57,12 @@ export const mapObjects = [
         name: "water",
         icon: [w],
         actions: ['drink', 'bark', 'swim']
+    },
+
+    {
+        name: "home",
+        icon: [h],
+        actions: ['smell', 'eat', 'pee', 'sleep']
     }
 
 ]
@@ -44,16 +70,16 @@ export const mapObjects = [
 
 export const map =
     [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
-    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t],
     [r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
     [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
-    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w],
@@ -112,12 +138,7 @@ export const drawMap = () => {
     }
 }
 
-export const initGame = () => {
-    drawBoard();
-    drawMap();
-    drawActions();
-    fillPointMap(...edenObj.Location, edenObj.icon)
-}
+
 export const drawActions = () => {
     cursorTo(16, 56);
     output('[^]')
@@ -170,7 +191,8 @@ export const drawBoard = () => {
 export const moveUp = () => {
     fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
     if (edenObj.Location[0] > 0) {
-        edenObj.Location[0]--
+        edenObj.Location[0]--;
+        draindown();
     }
     fillPointMap(...edenObj.Location, edenObj.icon)
 
@@ -180,6 +202,7 @@ export const moveRight = () => {
     fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
     if (edenObj.Location[1] < map[0].length - 1) {
         edenObj.Location[1]++
+        draindown();
     }
     fillPointMap(...edenObj.Location, edenObj.icon)
 
@@ -189,6 +212,7 @@ export const moveDown = () => {
     fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
     if (edenObj.Location[0] < map.length - 1) {
         edenObj.Location[0]++
+        draindown();
     }
     fillPointMap(...edenObj.Location, edenObj.icon)
 
@@ -198,11 +222,49 @@ export const moveLeft = () => {
     fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
     if (edenObj.Location[1] > 0) {
         edenObj.Location[1]--
+        draindown();
     }
     fillPointMap(...edenObj.Location, edenObj.icon)
 
 }
 
+export const updateStats = () => {
+    cursorTo(21, 2)
+    output(`Stamina: ${edenObj.CurStamina} / ${edenObj.maxStamina} | Hunger: ${Math.floor(edenObj.hunger)} % | Thirty: ${Math.floor(edenObj.thirsty)} % `)
+}
+
+export const draindown = () => {
+    ///To Do need to add if statement limits
+    edenObj.CurStamina--;
+    edenObj.hunger = edenObj.hunger + 0.25;
+    edenObj.thirsty = edenObj.thirsty + 0.75
+}
+
+export const printMessage = (mes) => {
+    cursorTo(23, 2)
+    output("                                                        ")
+    cursorTo(23, 2)
+    output(mes)
+    cursorTo(24, 2)
+    output("                                                        ")
+}
+export const printMessage2 = (mes) => {
+    cursorTo(24, 2)
+    output("                                                        ")
+    cursorTo(24, 2)
+    output(mes)
+}
+
+
+export const initGame = () => {
+    drawBoard();
+    drawMap();
+    drawActions();
+    fillPointMap(...edenObj.Location, edenObj.icon)
+    updateStats();
+    locCompare();
+    printCurrentActions();
+}
 //     __    __
 //     \/----\/
 //      \0  0/    WOOF!

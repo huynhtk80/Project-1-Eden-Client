@@ -6,9 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "program": "node index.js",
+    "go": "node index.js",
     "stdin": "node test_stdin.js",
-    "resize": "printf '\\x1b[8;25;65t'"
+    "resize": "printf '\\x1b[8;25;65t'",
+    "rego": "printf '\\x1b[8;25;65t' && node index.js"
   },
   "author": "Tim H",
   "license": "ISC",

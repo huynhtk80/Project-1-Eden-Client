@@ -1,6 +1,6 @@
 import { emitKeypressEvents } from 'readline';
-import { locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame } from './map.js';
+import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
+import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage } from './map.js';
 
 const { stdin, stdout } = process;
 
@@ -26,9 +26,22 @@ stdin.on('keypress', (str, key) => {
         case 'left':
             moveLeft();
             break
+        case '1':
+            doCurrentAction(1);
+            break;
+        case '2':
+            doCurrentAction(2)
+            break;
+        case '3':
+            doCurrentAction(3)
+            break;
+        case '4':
+            doCurrentAction(4)
+            break;
     }
     locCompare();
     printCurrentActions();
+    updateStats();
 });
 
 // ==================== MAIN THREAD ====================
