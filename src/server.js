@@ -1,11 +1,11 @@
 import express from "express"
-import { router as datasetRouter } from './routes/datasets.js'
+import { router as edenRouter } from './routes/edenObj.js'
 
 const app = express();
-const PORT = 4001;
+const PORT = 4002;
 app.use(express.json());
 
-app.use('/data', datasetRouter)
+app.use('/edenobj', edenRouter)
 
 
 app.listen(PORT, () => {

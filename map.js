@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { locCompare, printCurrentActions } from './event.js';
+//import fetch from 'node-fetch';
 const { stdin, stdout } = process;
 
 const BOX = {
@@ -19,26 +20,47 @@ const b = chalk.bgGrey.black('\u2581')
 const h = chalk.bgYellow(' ')
 
 export const edenObj = {
-    icon: 'D',
+    icon: 'E',
     name: 'Eden',
-    Location: [10, 10],
-    locx: 15,
-    locy: 15,
+    loc: { x: 20, y: 5 },
     CurStamina: 100,
     maxStamina: 100,
     hunger: 0,
     thirsty: 0,
     bladder: 0,
     experience: 0,
-    level: 1
+    level: 1,
+    online: 0
 }
 
-export const charObjects = [
+export const npObjects = [
     {
         icon: 'p',
-        name: "Puppy"
+        name: "puppy",
+        locx: 10,
+        locy: 15,
+        actions: ['smell', 'bark', 'play']
+
+    },
+
+    {
+        icon: chalk.bgGrey('C'),
+        name: "Moving Car",
+        locx: 1,
+        locy: 8,
+        actions: ['run away', 'freeze']
+
+    },
+
+    {
+        icon: 'C',
+        name: "Moving Car 2",
+        locx: 47,
+        locy: 10,
+        actions: ['run away', 'freeze']
 
     }
+
 ]
 
 export const mapObjects = [
@@ -113,22 +135,23 @@ export const fillPointMap = (r, c, char) => {
 
 export const clearPointsMap = (a, b) => fillPointMap(a, b, ' ');
 
-export const drawDog = () => {
-    let edenImage = [
-        '            /)-_-(\\        /)-_-(\\',
-        "             (o o)          (o o)'",
-        '     .-----__/\\o/            \\o/\\__-----.',
-        '    /  __      /              \\      __  \\',
-        '\\__/\\ /  \\_\\ |/                \\| /_/  \\ /\\__/',
-        '     \\\\     ||                  ||      \\\\',
-        '     //     ||                  ||      //',
-        '     |\\     |\\                  /|     /|']
+// export const drawDog = () => {
+//     let edenImage = [
+//         '            /)-_-(\\        /)-_-(\\',
+//         "             (o o)          (o o)'",
+//         '     .-----__/\\o/            \\o/\\__-----.',
+//         '    /  __      /              \\      __  \\',
+//         '\\__/\\ /  \\_\\ |/                \\| /_/  \\ /\\__/',
+//         '     \\\\     ||                  ||      \\\\',
+//         '     //     ||                  ||      //',
+//         '     |\\     |\\                  /|     /|']
 
-    for (let x = 2; x <= edenImage.length + 1; x++) {
-        cursorTo(x, 2)
-        output(edenImage[x - 2])
-    }
-}
+//     for (let x = 2; x <= edenImage.length + 1; x++) {
+//         cursorTo(x, 2)
+//         output(edenImage[x - 2])
+//     }
+// }
+
 export const drawMap = () => {
 
     for (let x = 0; x < map.length; x++) {
@@ -188,43 +211,53 @@ export const drawBoard = () => {
 
 };
 
+export const populateNP = () => {
+    for (let x = 0; x < npObjects.length; x++) {
+
+        fillPointMap(npObjects[x].locy, npObjects[x].locx, map[npObjects[x].locy][npObjects[x].locx])
+        //todo update NP object new location
+        fillPointMap(npObjects[x].locy, npObjects[x].locx, npObjects[x].icon)
+    }
+}
+
+
 export const moveUp = () => {
-    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
-    if (edenObj.Location[0] > 0) {
-        edenObj.Location[0]--;
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
+    if (edenObj.loc.y > 0) {
+        edenObj.loc.y--;
         draindown();
     }
-    fillPointMap(...edenObj.Location, edenObj.icon)
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
 
 }
 
 export const moveRight = () => {
-    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
-    if (edenObj.Location[1] < map[0].length - 1) {
-        edenObj.Location[1]++
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
+    if (edenObj.loc.x < map[0].length - 1) {
+        edenObj.loc.x++
         draindown();
     }
-    fillPointMap(...edenObj.Location, edenObj.icon)
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
 
 }
 
 export const moveDown = () => {
-    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
-    if (edenObj.Location[0] < map.length - 1) {
-        edenObj.Location[0]++
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
+    if (edenObj.loc.y < map.length - 1) {
+        edenObj.loc.y++
         draindown();
     }
-    fillPointMap(...edenObj.Location, edenObj.icon)
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
 
 }
 
 export const moveLeft = () => {
-    fillPointMap(...edenObj.Location, map[edenObj.Location[0]][edenObj.Location[1]])
-    if (edenObj.Location[1] > 0) {
-        edenObj.Location[1]--
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
+    if (edenObj.loc.x > 0) {
+        edenObj.loc.x--
         draindown();
     }
-    fillPointMap(...edenObj.Location, edenObj.icon)
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
 
 }
 
@@ -260,10 +293,11 @@ export const initGame = () => {
     drawBoard();
     drawMap();
     drawActions();
-    fillPointMap(...edenObj.Location, edenObj.icon)
+    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
     updateStats();
     locCompare();
     printCurrentActions();
+    populateNP()
 }
 //     __    __
 //     \/----\/

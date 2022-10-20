@@ -4,7 +4,7 @@ let lastLocationName = 'unknown';
 
 export const locCompare = () => {
     mapObjects.forEach(element => {
-        if (element.icon.some((i) => i === map[edenObj.Location[0]][edenObj.Location[1]])) {
+        if (element.icon.some((i) => i === map[edenObj.loc.y][edenObj.loc.x])) {
             currentLocationName = element.name;
         }
 

@@ -1,10 +1,23 @@
 import express from "express"
 export const router = express.Router();
 
+export const edenObjS = {
+    icon: 'E',
+    name: 'Eden',
+    locx: 15,
+    locy: 15,
+    CurStamina: 100,
+    maxStamina: 100,
+    hunger: 0,
+    thirsty: 0,
+    bladder: 0,
+    experience: 0,
+    level: 1,
+    online: 0
+}
 
 router.get("/", (request, response) => {
-    const sandwiches = listAllSandwiches();
-    response.send(sandwiches)
+    response.send(edenObjS)
 })
 
 router.post("/", (request, response) => {
