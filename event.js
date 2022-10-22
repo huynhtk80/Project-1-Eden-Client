@@ -1,10 +1,10 @@
-import { cursorTo, edenObj, map, mapObjects, output, printMessage, printMessage2 } from "./map.js"
+import { cursorTo, myGreyhound, map, mapObjects, output, printMessage, printMessage2 } from "./map.js"
 let currentLocationName = '';
 let lastLocationName = 'unknown';
 
 export const locCompare = () => {
     mapObjects.forEach(element => {
-        if (element.icon.some((i) => i === map[edenObj.loc.y][edenObj.loc.x])) {
+        if (element.icon.some((i) => i === map[myGreyhound.loc.y][myGreyhound.loc.x])) {
             currentLocationName = element.name;
         }
 
@@ -100,27 +100,27 @@ const eat = () => {
     switch (currentLocationName) {
         case 'grass':
             printMessage('Ate some grass... it was ok!')
-            edenObj.hunger = edenObj.hunger - 2
+            myGreyhound.hunger = myGreyhound.hunger - 2
             break
         case 'road':
             printMessage('YUKK..what is this black stuff?')
             break;
         case 'home':
-            edenObj.hunger = edenObj.hunger - 25
+            myGreyhound.hunger = myGreyhound.hunger - 25
             printMessage('Wow this is Amazing!!! why was it so high up?')
-            if (edenObj.hunger < -100) {
+            if (myGreyhound.hunger < -100) {
                 printMessage2('ARRGGG...this is bad!! maybe I should just lye down')
-                edenObj.CurStamina = edenObj.CurStamina - 50
+                myGreyhound.CurStamina = myGreyhound.CurStamina - 50
             }
-            else if (edenObj.hunger < -50) {
+            else if (myGreyhound.hunger < -50) {
                 printMessage2('ARRGGG... Maybe I should stop eatting!')
 
-            } else if (edenObj.hunger < -25) {
+            } else if (myGreyhound.hunger < -25) {
                 printMessage2('why does my tummy hurt? Maybe I will eat more!')
             }
             break;
         case 'home bowl':
-            edenObj.hunger = 0;
+            myGreyhound.hunger = 0;
 
             break;
         default:
@@ -129,11 +129,11 @@ const eat = () => {
 }
 
 const pee = () => {
-    edenObj.bladder = 0;
+    myGreyhound.bladder = 0;
     switch (currentLocationName) {
         case 'grass':
             printMessage('Ahhh....Now this spot is mine!!')
-            edenObj.experience = edenObj.experience + 10;
+            myGreyhound.experience = myGreyhound.experience + 10;
             break
         case 'road':
             printMessage('Ahhh... it\'s running onto my paws...oh wells')
@@ -142,7 +142,7 @@ const pee = () => {
             printMessage('Ahhh... relief... but somehow something feels wrong')
             break;
         case 'home bowl':
-            edenObj.hunger = 0;
+            myGreyhound.hunger = 0;
 
             break;
         default:
@@ -157,13 +157,13 @@ const swim = () => {
 }
 
 const drink = () => {
-    edenObj.thirsty = 0;
+    myGreyhound.thirsty = 0;
     printMessage('Lap Lap Lap')
 
 }
 
 const sleep = () => {
-    edenObj.CurStamina = edenObj.maxStamina;
+    myGreyhound.CurStamina = myGreyhound.maxStamina;
     printMessage('Zzz..Zzzz...Zzz...')
 
 }

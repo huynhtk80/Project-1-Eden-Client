@@ -1,11 +1,11 @@
 import express from "express"
-import { router as edenRouter } from './routes/edenObj.js'
+import { router as edenRouter } from './routes/greyhoundObj.js'
 
 const app = express();
 const PORT = 4002;
 app.use(express.json());
 
-app.use('/edenobj', edenRouter)
+app.use('/greyhound', edenRouter)
 
 
 app.listen(PORT, () => {

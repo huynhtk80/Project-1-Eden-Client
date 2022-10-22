@@ -8,6 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/server.js",
     "stdin": "node test_stdin.js",
+    "runi": "node index.js",
     "resize": "printf '\\x1b[8;25;65t'",
     "rego": "printf '\\x1b[8;25;65t' && node index.js"
   },
@@ -18,6 +19,7 @@
     "express": "^4.18.2",
     "font-awesome": "^4.7.0",
     "node-emoji": "^1.11.0",
+    "node-fetch": "^3.2.10",
     "readline-sync": "^1.4.10",
     "terminal-image": "^2.0.0",
     "xterm-headless": "^5.0.0"

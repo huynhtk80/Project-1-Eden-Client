@@ -19,9 +19,24 @@ const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
 const h = chalk.bgYellow(' ')
 
-export const edenObj = {
-    icon: 'E',
-    name: 'Eden',
+// export const myGreyhound = {
+//     icon: 'E',
+//     name: 'Eden',
+//     loc: { x: 20, y: 5 },
+//     CurStamina: 100,
+//     maxStamina: 100,
+//     hunger: 0,
+//     thirsty: 0,
+//     bladder: 0,
+//     experience: 0,
+//     level: 1,
+//     online: 0,
+//     lastOnline: 0
+// }
+
+export let myGreyhound = {
+    icon: '?',
+    name: 'Temp',
     loc: { x: 20, y: 5 },
     CurStamina: 100,
     maxStamina: 100,
@@ -30,9 +45,24 @@ export const edenObj = {
     bladder: 0,
     experience: 0,
     level: 1,
-    online: 0
+    online: 0,
+    lastOnline: 0
 }
 
+export const templateObj = {
+    icon: '',
+    name: '',
+    loc: { x: 20, y: 5 },
+    CurStamina: 100,
+    maxStamina: 100,
+    hunger: 0,
+    thirsty: 0,
+    bladder: 0,
+    experience: 0,
+    level: 1,
+    online: 0,
+    lastOnline: 0
+}
 export const npObjects = [
     {
         icon: 'p',
@@ -222,55 +252,55 @@ export const populateNP = () => {
 
 
 export const moveUp = () => {
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
-    if (edenObj.loc.y > 0) {
-        edenObj.loc.y--;
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.y > 0) {
+        myGreyhound.loc.y--;
         draindown();
     }
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
 
 }
 
 export const moveRight = () => {
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
-    if (edenObj.loc.x < map[0].length - 1) {
-        edenObj.loc.x++
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.x < map[0].length - 1) {
+        myGreyhound.loc.x++
         draindown();
     }
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
 
 }
 
 export const moveDown = () => {
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
-    if (edenObj.loc.y < map.length - 1) {
-        edenObj.loc.y++
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.y < map.length - 1) {
+        myGreyhound.loc.y++
         draindown();
     }
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
 
 }
 
 export const moveLeft = () => {
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, map[edenObj.loc.y][edenObj.loc.x])
-    if (edenObj.loc.x > 0) {
-        edenObj.loc.x--
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.x > 0) {
+        myGreyhound.loc.x--
         draindown();
     }
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
 
 }
 
 export const updateStats = () => {
     cursorTo(21, 2)
-    output(`Stamina: ${edenObj.CurStamina} / ${edenObj.maxStamina} | Hunger: ${Math.floor(edenObj.hunger)} % | Thirty: ${Math.floor(edenObj.thirsty)} % `)
+    output(`Stamina: ${myGreyhound.CurStamina} / ${myGreyhound.maxStamina} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
 }
 
 export const draindown = () => {
     ///To Do need to add if statement limits
-    edenObj.CurStamina--;
-    edenObj.hunger = edenObj.hunger + 0.25;
-    edenObj.thirsty = edenObj.thirsty + 0.75
+    myGreyhound.CurStamina--;
+    myGreyhound.hunger = myGreyhound.hunger + 0.25;
+    myGreyhound.thirsty = myGreyhound.thirsty + 0.75
 }
 
 export const printMessage = (mes) => {
@@ -293,7 +323,7 @@ export const initGame = () => {
     drawBoard();
     drawMap();
     drawActions();
-    fillPointMap(edenObj.loc.y, edenObj.loc.x, edenObj.icon)
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
     updateStats();
     locCompare();
     printCurrentActions();
