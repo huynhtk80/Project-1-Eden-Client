@@ -1,5 +1,7 @@
 import chalk from 'chalk';
+import { PORT } from './client.js';
 import { locCompare, printCurrentActions } from './event.js';
+import fetch from 'node-fetch';
 //import fetch from 'node-fetch';
 const { stdin, stdout } = process;
 
@@ -18,6 +20,8 @@ const r = chalk.bgGrey.yellow('\u2504')
 const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
 const h = chalk.bgYellow(' ')
+
+const onlinePlayers = [];
 
 // export const myGreyhound = {
 //     icon: 'E',
@@ -45,7 +49,7 @@ export let myGreyhound = {
     bladder: 0,
     experience: 0,
     level: 1,
-    online: 0,
+    online: false,
     lastOnline: 0
 }
 
@@ -60,7 +64,7 @@ export const templateObj = {
     bladder: 0,
     experience: 0,
     level: 1,
-    online: 0,
+    online: false,
     lastOnline: 0
 }
 export const npObjects = [
@@ -97,7 +101,7 @@ export const mapObjects = [
     {
         name: "grass",
         icon: [g],
-        actions: ['smell', 'bark', 'play']
+        actions: ['smell', 'pee', 'bark', 'play']
     },
     {
         name: "road",
@@ -301,6 +305,8 @@ export const draindown = () => {
     myGreyhound.CurStamina--;
     myGreyhound.hunger = myGreyhound.hunger + 0.25;
     myGreyhound.thirsty = myGreyhound.thirsty + 0.75
+    myGreyhound.lastOnline = Date.now()
+    myGreyhound.online = true;
 }
 
 export const printMessage = (mes) => {
@@ -343,3 +349,37 @@ export const initGame = () => {
 //  `-,,,  ,_      ;'~U'
 //   _,-' ,'`-__; '--.
 //  (_/'~~      ''''(;
+
+
+let lastOnline = [];
+
+export const updateOnlinePlayer = async () => {
+    myGreyhound.online = true;
+    myGreyhound.lastOnline = Date.now;
+
+    let update = {
+        name: myGreyhound.name,
+        online: myGreyhound.online,
+        lastOnline: myGreyhound.lastOnline,
+        loc: myGreyhound.loc
+    }
+
+    const response = await fetch(`http://localhost:${PORT}/greyhound`, {
+        method: 'PATCH',
+        body: JSON.stringify(update),
+        headers: { 'Content-Type': 'application/json' }
+    })
+
+    const data = await response.json();
+    lastOnline.forEach(element => { fillPointMap(element.loc.y, element.loc.x, map[element.loc.y][element.loc.x]) })
+    lastOnline = []
+    if (data !== 'empty') {
+        lastOnline = JSON.parse(data);
+        lastOnline.forEach(element => fillPointMap(element.loc.y, element.loc.x, element.icon))
+    }
+
+
+
+    //console.log(data)
+
+}

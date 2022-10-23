@@ -1,5 +1,5 @@
 import express from "express"
-import { router as edenRouter } from './routes/greyhoundObj.js'
+import { checkOnline, router as edenRouter } from './routes/greyhoundObj.js'
 
 const app = express();
 const PORT = 4002;
@@ -14,4 +14,6 @@ app.listen(PORT, () => {
 
 
 
+
+setInterval(checkOnline, 120000)
 

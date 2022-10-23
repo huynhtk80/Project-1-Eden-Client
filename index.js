@@ -1,21 +1,28 @@
 import * as readline from 'readline';
 import readlineSync from 'readline-Sync'
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, npObjects, populateNP, fillPointMap, map, myGreyhound, templateObj } from './map.js';
+import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, npObjects, populateNP, fillPointMap, map, myGreyhound, templateObj, updateOnlinePlayer } from './map.js';
 import cfonts from 'cfonts';
 import { loadGreyhoundGet, newGreyhoundPost, PORT } from './client.js';
 import fetch from 'node-fetch';
 
 const { stdin, stdout } = process;
 
-const newPlayer = () => {
+const newPlayer = async () => {
     let name = readlineSync.question('What would you like to name your greyhound: ', { hideEchoBack: false, limit: /[\S\s]+[\S]+/, limitMessage: 'can not be blank' });
     let icon = readlineSync.keyIn('Select a Keyboard Char to represent your greyhound: ', { hideEchoBack: false });
 
     Object.assign(myGreyhound, templateObj)
     myGreyhound.name = name;
     myGreyhound.icon = icon;
-    newGreyhoundPost();
+    myGreyhound.online = true;
+    myGreyhound.lastOnline = Date.now();
+    let result = await newGreyhoundPost();
+    console.log(result)
+    if (result === 'try again') {
+        console.log('GreyHound Name already Exist')
+        await newPlayer();
+    }
 }
 
 // const loadPlayer = (tempGrey) => {
@@ -36,9 +43,9 @@ cfonts.say('Eden\'s \nAdventure', {
     lineHeight: 1,              // define the line height
     space: true,                // define if the output text should have empty lines on top and on the bottom
     maxLength: '0',             // define how many character can be on one line
-    gradient: false,            // define your two gradient colors
-    independentGradient: false, // define if you want to recalculate the gradient for each new line
-    transitionGradient: false,  // define if this is a transition between colors directly
+    gradient: ['blue', 'red'],            // define your two gradient colors
+    independentGradient: true, // define if you want to recalculate the gradient for each new line
+    transitionGradient: true,  // define if this is a transition between colors directly
     env: 'node'                 // define the environment cfonts is being executed in
 });
 
@@ -47,7 +54,7 @@ let index = readlineSync.keyInSelect(MENUOPT, 'Menu Options', { cancel: false })
 
 switch (MENUOPT[index]) {
     case 'Adopt a New Greyhound':
-        newPlayer();
+        await newPlayer();
         console.log("adopt new")
         break;
     case 'Load existing Greyhound':
@@ -188,6 +195,8 @@ const movePuppy = () => {
 setInterval(moveCar, 250)
 setInterval(moveCar2, 200)
 setInterval(movePuppy, 500)
+
+setInterval(updateOnlinePlayer, 250)
 
 
 

@@ -1,3 +1,5 @@
+import { PORT } from "./client.js";
+import fetch from "node-fetch";
 import { cursorTo, myGreyhound, map, mapObjects, output, printMessage, printMessage2 } from "./map.js"
 let currentLocationName = '';
 let lastLocationName = 'unknown';
@@ -162,8 +164,15 @@ const drink = () => {
 
 }
 
-const sleep = () => {
+const sleep = async () => {
     myGreyhound.CurStamina = myGreyhound.maxStamina;
-    printMessage('Zzz..Zzzz...Zzz...')
-
+    //printMessage('Zzz..Zzzz...Zzz...')
+    printMessage2('Your Progress is being saved....')
+    const response = await fetch(`http://localhost:${PORT}/greyhound`, {
+        method: 'PUT',
+        body: JSON.stringify(myGreyhound),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    const data = await response.text();
+    printMessage2(data)
 }

@@ -12,7 +12,7 @@ export const newGreyhoundPost = async () => {
     });
     const data = await response.text();
 
-    console.log(data);
+    return data;
 }
 
 export const loadGreyhoundGet = async (name) => {
