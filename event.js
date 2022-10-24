@@ -1,4 +1,4 @@
-import { PORT, URI } from "./client.js";
+import { PORT, saveGreyhoundPut, URI } from "./client.js";
 import fetch from "node-fetch";
 import { cursorTo, myGreyhound, map, mapObjects, output, printMessage, printMessage2 } from "./map.js"
 let currentLocationName = '';
@@ -166,13 +166,8 @@ const drink = () => {
 
 const sleep = async () => {
     myGreyhound.CurStamina = myGreyhound.maxStamina;
-    //printMessage('Zzz..Zzzz...Zzz...')
+    printMessage('Zzz..Zzzz...Zzz...')
     printMessage2('Your Progress is being saved....')
-    const response = await fetch(`${URI}:${PORT}/greyhound`, {
-        method: 'PUT',
-        body: JSON.stringify(myGreyhound),
-        headers: { 'Content-Type': 'application/json' }
-    })
-    const data = await response.text();
+    let data = await saveGreyhoundPut();
     printMessage2(data)
 }

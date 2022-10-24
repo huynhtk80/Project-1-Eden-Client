@@ -35,3 +35,13 @@ export const updateOnline = async (update) => {
     const data = await response.json();
     return data
 }
+
+export const saveGreyhoundPut = async () => {
+    const response = await fetch(`${URI}:${PORT}/greyhound`, {
+        method: 'PUT',
+        body: JSON.stringify(myGreyhound),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    const data = await response.text();
+    return data
+}

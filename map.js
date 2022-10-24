@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { PORT, updateOnline, URI } from './client.js';
 import { locCompare, printCurrentActions } from './event.js';
-import fetch from 'node-fetch';
 const { stdin, stdout } = process;
 
 const BOX = {
