@@ -2,10 +2,12 @@ import fetch from 'node-fetch';
 import readlineSync from 'readline-sync'
 import { myGreyhound } from './map.js';
 
+export const URI = 'http://localhost'
 export const PORT = 4002;
 
+//
 export const newGreyhoundPost = async () => {
-    const response = await fetch(`http://localhost:${PORT}/greyhound`, {
+    const response = await fetch(`${URI}:${PORT}/greyhound`, {
         method: 'post',
         body: JSON.stringify(myGreyhound),
         headers: { 'Content-Type': 'application/json' }
@@ -16,10 +18,20 @@ export const newGreyhoundPost = async () => {
 }
 
 export const loadGreyhoundGet = async (name) => {
-    const response = await fetch(`http://localhost:${PORT}/greyhound?name=${name}`, {
+    const response = await fetch(`${URI}:${PORT}/greyhound?name=${name}`, {
         method: 'GET'
     })
     const data = await response.json();
-    let pause = readlineSync.question("temp hold")
+    //let pause = readlineSync.question("temp hold")
     return data;
+}
+
+export const updateOnline = async (update) => {
+    const response = await fetch(`${URI}:${PORT}/greyhound`, {
+        method: 'PATCH',
+        body: JSON.stringify(update),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    const data = await response.json();
+    return data
 }

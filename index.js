@@ -1,38 +1,13 @@
 import * as readline from 'readline';
-import readlineSync from 'readline-Sync'
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, hideCursor, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, npObjects, populateNP, fillPointMap, map, myGreyhound, templateObj, updateOnlinePlayer } from './map.js';
+import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, npObjects, fillPointMap, map, myGreyhound, updateOnlinePlayer } from './map.js';
 import cfonts from 'cfonts';
-import { loadGreyhoundGet, newGreyhoundPost, PORT } from './client.js';
-import fetch from 'node-fetch';
+
+import { menu } from './menu.js';
 
 const { stdin, stdout } = process;
 
-const newPlayer = async () => {
-    let name = readlineSync.question('What would you like to name your greyhound: ', { hideEchoBack: false, limit: /[\S\s]+[\S]+/, limitMessage: 'can not be blank' });
-    let icon = readlineSync.keyIn('Select a Keyboard Char to represent your greyhound: ', { hideEchoBack: false });
 
-    Object.assign(myGreyhound, templateObj)
-    myGreyhound.name = name;
-    myGreyhound.icon = icon;
-    myGreyhound.online = true;
-    myGreyhound.lastOnline = Date.now();
-    let result = await newGreyhoundPost();
-    console.log(result)
-    if (result === 'try again') {
-        console.log('GreyHound Name already Exist')
-        await newPlayer();
-    }
-}
-
-// const loadPlayer = (tempGrey) => {
-
-//     let pause = readlineSync.question("temp hold")
-//     console.log("Temp Grey:", tempGrey)
-
-//     console.log(myGreyhound)
-
-// }
 clearScreen();
 cfonts.say('Eden\'s \nAdventure', {
     font: 'tiny',              // define the font face
@@ -48,38 +23,6 @@ cfonts.say('Eden\'s \nAdventure', {
     transitionGradient: true,  // define if this is a transition between colors directly
     env: 'node'                 // define the environment cfonts is being executed in
 });
-
-const MENUOPT = ['Adopt a New Greyhound', 'Load existing Greyhound', 'Help']
-let index = readlineSync.keyInSelect(MENUOPT, 'Menu Options', { cancel: false });
-
-switch (MENUOPT[index]) {
-    case 'Adopt a New Greyhound':
-        await newPlayer();
-        console.log("adopt new")
-        break;
-    case 'Load existing Greyhound':
-        let noload = true;
-        while (noload === true) {
-            let name = readlineSync.question('What is the name of your greyhound: ', { hideEchoBack: false, limit: /[\S\s]+[\S]+/, limitMessage: 'can not be blank' });
-            console.log(name)
-            const response = await fetch(`http://localhost:${PORT}/greyhound?name=${name}`, {
-                method: 'GET'
-            })
-            const data = await response.json();
-            if (data.name === 'ERROR') {
-                console.log("greyhound not found, try again")
-            } else {
-                Object.assign(myGreyhound, data)
-                noload = false;
-            }
-            console.log("loading greyhound")
-        }
-        break;
-
-}
-
-
-
 
 const turnOnKeypress = () => {
     stdin.resume();
@@ -131,8 +74,7 @@ const turnOnKeypress = () => {
 
 // ==================== Game Map Start====================
 
-
-hideCursor();
+await menu();
 
 initGame();
 turnOnKeypress();

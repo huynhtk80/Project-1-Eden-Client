@@ -1,8 +1,7 @@
 import chalk from 'chalk';
-import { PORT } from './client.js';
+import { PORT, updateOnline, URI } from './client.js';
 import { locCompare, printCurrentActions } from './event.js';
 import fetch from 'node-fetch';
-//import fetch from 'node-fetch';
 const { stdin, stdout } = process;
 
 const BOX = {
@@ -20,23 +19,6 @@ const r = chalk.bgGrey.yellow('\u2504')
 const t = chalk.bgGrey.black('\u2594')
 const b = chalk.bgGrey.black('\u2581')
 const h = chalk.bgYellow(' ')
-
-const onlinePlayers = [];
-
-// export const myGreyhound = {
-//     icon: 'E',
-//     name: 'Eden',
-//     loc: { x: 20, y: 5 },
-//     CurStamina: 100,
-//     maxStamina: 100,
-//     hunger: 0,
-//     thirsty: 0,
-//     bladder: 0,
-//     experience: 0,
-//     level: 1,
-//     online: 0,
-//     lastOnline: 0
-// }
 
 export let myGreyhound = {
     icon: '?',
@@ -326,6 +308,7 @@ export const printMessage2 = (mes) => {
 
 
 export const initGame = () => {
+    hideCursor();
     drawBoard();
     drawMap();
     drawActions();
@@ -355,8 +338,7 @@ let lastOnline = [];
 
 export const updateOnlinePlayer = async () => {
     myGreyhound.online = true;
-    myGreyhound.lastOnline = Date.now;
-
+    myGreyhound.lastOnline = Date.now();
     let update = {
         name: myGreyhound.name,
         online: myGreyhound.online,
@@ -364,22 +346,12 @@ export const updateOnlinePlayer = async () => {
         loc: myGreyhound.loc
     }
 
-    const response = await fetch(`http://localhost:${PORT}/greyhound`, {
-        method: 'PATCH',
-        body: JSON.stringify(update),
-        headers: { 'Content-Type': 'application/json' }
-    })
-
-    const data = await response.json();
+    const data = await updateOnline(update);
     lastOnline.forEach(element => { fillPointMap(element.loc.y, element.loc.x, map[element.loc.y][element.loc.x]) })
     lastOnline = []
     if (data !== 'empty') {
         lastOnline = JSON.parse(data);
         lastOnline.forEach(element => fillPointMap(element.loc.y, element.loc.x, element.icon))
     }
-
-
-
-    //console.log(data)
 
 }
