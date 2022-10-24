@@ -1,6 +1,7 @@
 import { PORT, saveGreyhoundPut, URI } from "./client.js";
-import fetch from "node-fetch";
-import { cursorTo, myGreyhound, map, mapObjects, output, printMessage, printMessage2 } from "./map.js"
+import { cursorTo, output, printMessage, printMessage2 } from "./map.js"
+import { mapObjects, myGreyhound, map } from './cont.js'
+
 let currentLocationName = '';
 let lastLocationName = 'unknown';
 

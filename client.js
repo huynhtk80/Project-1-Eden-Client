@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import readlineSync from 'readline-sync'
-import { myGreyhound } from './map.js';
+
 
 export const URI = 'http://localhost'
 export const PORT = 4002;

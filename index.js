@@ -1,8 +1,8 @@
 import * as readline from 'readline';
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, npObjects, fillPointMap, map, myGreyhound, updateOnlinePlayer } from './map.js';
+import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer } from './map.js';
 import cfonts from 'cfonts';
-
+import { myGreyhound, npObjects, map } from "./cont.js"
 import { menu } from './menu.js';
 
 const { stdin, stdout } = process;

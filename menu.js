@@ -1,6 +1,6 @@
 import readlineSync from 'readline-Sync'
 import { loadGreyhoundGet, newGreyhoundPost } from './client.js';
-import { myGreyhound, templateObj } from './map.js';
+import { myGreyhound, templateObj } from './cont.js';
 
 
 export const menu = async () => {
