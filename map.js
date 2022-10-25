@@ -1,5 +1,5 @@
 import { updateOnline } from './client.js';
-import { BOX, myGreyhound, npObjects, map, sleep } from './cont.js';
+import { BOX, myGreyhound, npObjects, currentMap, mapArr, mapObjects } from './cont.js';
 import { locCompare, printCurrentActions } from './event.js';
 const { stdin, stdout } = process;
 
@@ -28,13 +28,21 @@ export const fillPointMap = (r, c, char) => {
 export const clearPointsMap = (a, b) => fillPointMap(a, b, ' ');
 
 export const drawMap = () => {
-
-    for (let x = 0; x < map.length; x++) {
-        for (let i = 0; i < map[0].length; i++) {
-            fillPointMap(x, i, map[x][i])
+    Object.assign(currentMap, mapArr[myGreyhound.loc.map])
+    for (let x = 0; x < currentMap.length; x++) {
+        for (let i = 0; i < currentMap[0].length; i++) {
+            fillPointMap(x, i, currentMap[x][i])
         }
     }
 }
+// export const drawMap1 = () => {
+
+//     for (let x = 0; x < map0.length; x++) {
+//         for (let i = 0; i < map0[0].length; i++) {
+//             fillPointMap(x, i, map0[x][i])
+//         }
+//     }
+// }
 
 export const drawActions = () => {
     cursorTo(16, 56);
@@ -88,9 +96,11 @@ export const drawBoard = () => {
 export const populateNP = () => {
     for (let x = 0; x < npObjects.length; x++) {
 
-        fillPointMap(npObjects[x].locy, npObjects[x].locx, map[npObjects[x].locy][npObjects[x].locx])
+        fillPointMap(npObjects[x].loc.y, npObjects[x].loc.x, currentMap[npObjects[x].loc.y][npObjects[x].loc.x])
         //todo update NP object new location
-        fillPointMap(npObjects[x].locy, npObjects[x].locx, npObjects[x].icon)
+        if (npObjects[x].loc.map === myGreyhound.loc.map) {
+            fillPointMap(npObjects[x].loc.y, npObjects[x].loc.x, npObjects[x].icon)
+        }
     }
 }
 
@@ -100,10 +110,10 @@ const tired = () => {
         rest = true
         printMessage("I'm tired, lets take a break")
         setTimeout(() => {
-            myGreyhound.CurStamina += 5;
+            myGreyhound.CurStamina += 10;
             updateStats()
             rest = false;
-        }, 3000);
+        }, 2000);
     }
 }
 
@@ -113,7 +123,7 @@ export const collision = (dir) => {
         case 'up':
             for (const npObject of npObjects) {
 
-                if (myGreyhound.loc.y - 1 === npObject.locy && myGreyhound.loc.x === npObject.locx) {
+                if (myGreyhound.loc.y - 1 === npObject.loc.y && myGreyhound.loc.x === npObject.loc.x) {
                     col = true
                 }
             }
@@ -122,10 +132,14 @@ export const collision = (dir) => {
                     col = true
                 }
             }
+            //warning might break if wall is not mapObject[4]
+            if (mapObjects[4].icon.some((i) => i === currentMap[myGreyhound.loc.y - 1][myGreyhound.loc.x])) {
+                col = true
+            }
             break;
         case 'down':
             for (const npObject of npObjects) {
-                if (myGreyhound.loc.y + 1 === npObject.locy && myGreyhound.loc.x === npObject.locx) {
+                if (myGreyhound.loc.y + 1 === npObject.loc.y && myGreyhound.loc.x === npObject.loc.x) {
                     col = true
                 }
             }
@@ -134,10 +148,13 @@ export const collision = (dir) => {
                     col = true
                 }
             }
+            if (mapObjects[4].icon.some((i) => i === currentMap[myGreyhound.loc.y + 1][myGreyhound.loc.x])) {
+                col = true
+            }
             break;
         case 'left':
             for (const npObject of npObjects) {
-                if (myGreyhound.loc.y === npObject.locy && myGreyhound.loc.x - 1 === npObject.locx) {
+                if (myGreyhound.loc.y === npObject.loc.y && myGreyhound.loc.x - 1 === npObject.loc.x) {
                     col = true
                 }
             }
@@ -146,11 +163,14 @@ export const collision = (dir) => {
                     col = true
                 }
             }
+            if (mapObjects[4].icon.some((i) => i === currentMap[myGreyhound.loc.y][myGreyhound.loc.x - 1])) {
+                col = true
+            }
             break;
         case 'right':
             for (const npObject of npObjects) {
-                //console.log(`Ex= ${myGreyhound.loc.x}, name: ${npObject.name}, x=${npObject.locx}`)
-                if (myGreyhound.loc.y === npObject.locy && myGreyhound.loc.x + 1 === npObject.locx) {
+                //console.log(`Ex= ${myGreyhound.loc.x}, name: ${npObject.name}, x=${npObject.loc.x}`)
+                if (myGreyhound.loc.y === npObject.loc.y && myGreyhound.loc.x + 1 === npObject.loc.x) {
                     col = true
                 }
 
@@ -159,6 +179,9 @@ export const collision = (dir) => {
                 if (myGreyhound.loc.y === online.loc.y && myGreyhound.loc.x + 1 === online.loc.x) {
                     col = true
                 }
+            }
+            if (mapObjects[4].icon.some((i) => i === currentMap[myGreyhound.loc.y][myGreyhound.loc.x + 1])) {
+                col = true
             }
             break;
         default:
@@ -173,7 +196,7 @@ export const moveUp = () => {
     tired()
 
 
-    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, currentMap[myGreyhound.loc.y][myGreyhound.loc.x])
     if (myGreyhound.loc.y > 0 && rest === false && collision('up') === false) {
         myGreyhound.loc.y--;
         draindown();
@@ -185,8 +208,8 @@ export const moveUp = () => {
 export const moveRight = () => {
     tired()
 
-    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.x < map[0].length - 1 && rest === false && collision('right') === false) {
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, currentMap[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.x < currentMap[0].length - 1 && rest === false && collision('right') === false) {
         myGreyhound.loc.x++
         draindown();
     }
@@ -196,8 +219,8 @@ export const moveRight = () => {
 export const moveDown = () => {
     tired()
 
-    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.y < map.length - 1 && rest === false && collision('down') === false) {
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, currentMap[myGreyhound.loc.y][myGreyhound.loc.x])
+    if (myGreyhound.loc.y < currentMap.length - 1 && rest === false && collision('down') === false) {
         myGreyhound.loc.y++
         draindown();
     }
@@ -208,7 +231,7 @@ export const moveDown = () => {
 export const moveLeft = () => {
     tired()
 
-    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
+    fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, currentMap[myGreyhound.loc.y][myGreyhound.loc.x])
     if (myGreyhound.loc.x > 0 && rest === false && collision('left') === false) {
         myGreyhound.loc.x--
         draindown();
@@ -219,14 +242,14 @@ export const moveLeft = () => {
 
 export const updateStats = () => {
     cursorTo(21, 2)
-    output(`Stamina: ${myGreyhound.CurStamina} / ${myGreyhound.maxStamina} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
+    output(`Stamina: ${Math.floor(myGreyhound.CurStamina)} / ${myGreyhound.maxStamina} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
     cursorTo(22, 2)
     output(`Exp Points: ${myGreyhound.experience} | Level: ${myGreyhound.level} lvl`)
 }
 
 export const draindown = () => {
     ///To-Do need to add if statement limits
-    if (myGreyhound.CurStamina > 0) { myGreyhound.CurStamina--; }
+    if (myGreyhound.CurStamina > 0) { myGreyhound.CurStamina -= 0.5; }
     if (myGreyhound.hunger < 100) myGreyhound.hunger = myGreyhound.hunger + 0.25;
     if (myGreyhound.thirsty < 100) myGreyhound.thirsty = myGreyhound.thirsty + 0.75
     if (myGreyhound.thirsty < 100 && myGreyhound.bladder < 100) myGreyhound.bladder += 0.5
@@ -276,11 +299,14 @@ export const updateOnlinePlayer = async () => {
     }
 
     const data = await updateOnline(update);
-    lastOnline.forEach(element => { fillPointMap(element.loc.y, element.loc.x, map[element.loc.y][element.loc.x]) })
+    lastOnline.forEach(element => { fillPointMap(element.loc.y, element.loc.x, currentMap[element.loc.y][element.loc.x]) })
     lastOnline = []
     if (data !== 'empty') {
         lastOnline = JSON.parse(data);
-        lastOnline.forEach(element => fillPointMap(element.loc.y, element.loc.x, element.icon))
+        lastOnline.forEach(element => {
+            if (element.loc.map === myGreyhound.loc.map)
+                fillPointMap(element.loc.y, element.loc.x, element.icon)
+        })
     }
 
 }

@@ -3,6 +3,7 @@ import { emitKeypressEvents } from 'readline';
 const { stdin } = process;
 
 emitKeypressEvents(stdin)
+
 // without this, we would only get streams once enter is pressed
 stdin.setRawMode(true);
 

@@ -9,12 +9,21 @@ export const BOX = {
     VERTICAL_LINE: '\u2502',
 };
 
-const g = chalk.bgGreen(' ')
-const w = chalk.blue('\u2592')
-const r = chalk.bgGrey.yellow('\u2504')
-const t = chalk.bgGrey.black('\u2594')
-const b = chalk.bgGrey.black('\u2581')
-const h = chalk.bgYellow(' ')
+const g = chalk.bgGreen(' ') //grass
+const w = chalk.blue('\u2592')//water
+const r = chalk.bgGrey.yellow('\u2504')//road midline
+const t = chalk.bgGrey.black('\u2594')//road top
+const b = chalk.bgGrey.black('\u2581')//road bottom
+const h = chalk.bgYellow('\u2591')// home
+const f = chalk.bgMagenta(' ')//house floor
+const q = '\u2588'// wall
+const n = ' '// no man's land
+const d = chalk.red('\u2593')//door mat inside
+const m = chalk.blue('\u2593')//door mat outside
+const ctl = chalk.bgYellow('\u256d')//dog bed
+const ctr = chalk.bgYellow('\u256e')
+const cbr = chalk.bgYellow('\u256f')
+const cbl = chalk.bgYellow('\u2570')
 
 export const mapObjects = [
     {
@@ -37,17 +46,51 @@ export const mapObjects = [
     {
         name: "home",
         icon: [h],
-        actions: ['smell', 'eat', 'pee', 'sleep']
-    }
+        actions: ['smell', 'eat', 'pee']
+    },
+
+    {
+        name: "wall",
+        icon: [q],
+        actions: ['crash']
+    },
+
+    {
+        name: "door mat",
+        icon: [d],
+        actions: ['go outside']
+    },
+    {
+        name: "door mat outside",
+        icon: [m],
+        actions: ['go inside']
+    },
+    {
+        name: "house floor",
+        icon: [f],
+        actions: ['smell']
+    },
+    {
+        name: "blank",
+        icon: [n],
+        actions: []
+    },
+    {
+        name: "dog bed",
+        icon: [ctl, ctr, cbr, cbl],
+        actions: ['sleep']
+    },
+
 
 ]
 
-
+export const ball1loc = { map: 0, x: 28, y: 11 }
+export const ball2loc = { map: 1, x: 34, y: 17 }
 
 export let myGreyhound = {
     icon: '?',
     name: 'Temp',
-    loc: { x: 20, y: 5 },
+    loc: { map: 0, x: 20, y: 5 },
     CurStamina: 100,
     maxStamina: 100,
     hunger: 0,
@@ -56,13 +99,15 @@ export let myGreyhound = {
     experience: 0,
     level: 1,
     online: false,
-    lastOnline: 0
+    lastOnline: 0,
+    ball1: false,
+    ball2: false
 }
 
 export const templateObj = {
     icon: '',
     name: '',
-    loc: { x: 20, y: 5 },
+    loc: { map: 0, x: 20, y: 5 },
     CurStamina: 100,
     maxStamina: 100,
     hunger: 0,
@@ -71,14 +116,15 @@ export const templateObj = {
     experience: 0,
     level: 1,
     online: false,
-    lastOnline: 0
+    lastOnline: 0,
+    ball1: false,
+    ball2: false
 }
 export const npObjects = [
     {
         icon: 'p',
         name: "puppy",
-        locx: 10,
-        locy: 15,
+        loc: { map: 1, x: 10, y: 15 },
         actions: ['smell', 'bark', 'play']
 
     },
@@ -86,8 +132,7 @@ export const npObjects = [
     {
         icon: chalk.bgGrey('C'),
         name: "Moving Car",
-        locx: 1,
-        locy: 8,
+        loc: { map: 1, x: 1, y: 8 },
         actions: ['run away', 'freeze']
 
     },
@@ -95,15 +140,16 @@ export const npObjects = [
     {
         icon: 'C',
         name: "Moving Car 2",
-        locx: 47,
-        locy: 10,
+        loc: { map: 1, x: 47, y: 10 },
         actions: ['run away', 'freeze']
 
     }
 
 ]
 
-export const map =
+
+
+export let currentMap =
     [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, h, h, h, h, h, h, h, h, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
@@ -124,8 +170,50 @@ export const map =
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w, w]
     ]
 
+export const map1 =
+    [[g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, m, m, m, m, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t, t],
+    [r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r, r],
+    [b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b, b],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w],
+    [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w, w]
+    ]
+export const map0 =
+    [[n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, ctl, ctr, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, cbl, cbr, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, q, q, q, q, q, q, q, h, h, q, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, q, q, q, q, q, q, q, h, h, q, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, h, h, h, h, h, h, h, h, h, h, d, d, d, d, d, h, h, q, h, h, h, h, h, h, h, h, h, h, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, q, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n],
+    [n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n, n]
+    ]
 
-export const sleep = ms => new Promise(r => setTimeout(r, ms));
+export let mapArr = [map0, map1];
+
+
     //     __    __
 //     \/----\/
 //      \0  0/    WOOF!

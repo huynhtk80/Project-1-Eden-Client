@@ -2,7 +2,7 @@ import * as readline from 'readline';
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
 import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision } from './map.js';
 import cfonts from 'cfonts';
-import { myGreyhound, npObjects, map } from "./cont.js"
+import { myGreyhound, npObjects, currentMap } from "./cont.js"
 import { menu } from './menu.js';
 
 const { stdin, stdout } = process;
@@ -68,9 +68,11 @@ const turnOnKeypress = () => {
                 console.log(collision('right'))
                 break;
         }
+        //console.log('x: ', myGreyhound.loc.x, ' y: ', myGreyhound.loc.y)
         locCompare();
         printCurrentActions();
         updateStats();
+
     });
 }
 
@@ -85,57 +87,61 @@ turnOnKeypress();
 
 
 const moveCar = () => {
-    if (myGreyhound.loc.x === npObjects[1].locx + 1 && myGreyhound.loc.y == npObjects[1].locy) {
-        printMessage('Wow that was a close one!!!!')
-        //edenObj.CurStamina = edenObj.CurStamina - 10;
-    } else if (npObjects[1].locx > 46) {
-        fillPointMap(npObjects[1].locy, npObjects[1].locx, map[npObjects[1].locy][npObjects[1].locx])
-        npObjects[1].locx = 0
-        fillPointMap(npObjects[1].locy, npObjects[1].locx, npObjects[1].icon)
-    } else {
-        fillPointMap(npObjects[1].locy, npObjects[1].locx, map[npObjects[1].locy][npObjects[1].locx])
-        npObjects[1].locx++
-        fillPointMap(npObjects[1].locy, npObjects[1].locx, npObjects[1].icon)
+    if (myGreyhound.loc.map === 1) {
+        if (myGreyhound.loc.x === npObjects[1].loc.x + 1 && myGreyhound.loc.y == npObjects[1].loc.y) {
+            printMessage('Wow that was a close one!!!!')
+            //edenObj.CurStamina = edenObj.CurStamina - 10;
+        } else if (npObjects[1].loc.x > 46) {
+            fillPointMap(npObjects[1].loc.y, npObjects[1].loc.x, currentMap[npObjects[1].loc.y][npObjects[1].loc.x])
+            npObjects[1].loc.x = 0
+            fillPointMap(npObjects[1].loc.y, npObjects[1].loc.x, npObjects[1].icon)
+        } else {
+            fillPointMap(npObjects[1].loc.y, npObjects[1].loc.x, currentMap[npObjects[1].loc.y][npObjects[1].loc.x])
+            npObjects[1].loc.x++
+            fillPointMap(npObjects[1].loc.y, npObjects[1].loc.x, npObjects[1].icon)
+        }
     }
 }
 
 const moveCar2 = () => {
-
-    if (myGreyhound.loc.x === npObjects[2].locx - 1 && myGreyhound.loc.y == npObjects[2].locy) {
-        printMessage('Wow that was a close one!!!!')
-        //edenObj.CurStamina = edenObj.CurStamina - 10;
-    } else if (npObjects[2].locx <= 0) {
-        fillPointMap(npObjects[2].locy, npObjects[2].locx, map[npObjects[2].locy][npObjects[2].locx])
-        npObjects[2].locx = 47
-        fillPointMap(npObjects[2].locy, npObjects[2].locx, npObjects[2].icon)
-    } else {
-        fillPointMap(npObjects[2].locy, npObjects[2].locx, map[npObjects[2].locy][npObjects[2].locx])
-        npObjects[2].locx--
-        fillPointMap(npObjects[2].locy, npObjects[2].locx, npObjects[2].icon)
+    if (myGreyhound.loc.map === 1) {
+        if (myGreyhound.loc.x === npObjects[2].loc.x - 1 && myGreyhound.loc.y == npObjects[2].loc.y) {
+            printMessage('Wow that was a close one!!!!')
+            //edenObj.CurStamina = edenObj.CurStamina - 10;
+        } else if (npObjects[2].loc.x <= 0) {
+            fillPointMap(npObjects[2].loc.y, npObjects[2].loc.x, currentMap[npObjects[2].loc.y][npObjects[2].loc.x])
+            npObjects[2].loc.x = 47
+            fillPointMap(npObjects[2].loc.y, npObjects[2].loc.x, npObjects[2].icon)
+        } else {
+            fillPointMap(npObjects[2].loc.y, npObjects[2].loc.x, currentMap[npObjects[2].loc.y][npObjects[2].loc.x])
+            npObjects[2].loc.x--
+            fillPointMap(npObjects[2].loc.y, npObjects[2].loc.x, npObjects[2].icon)
+        }
     }
 }
 
-const calcDistance = (x1, x2, y1, y2) => {
+export const calcDistance = (x1, x2, y1, y2) => {
     return Math.floor(Math.sqrt((Math.abs(x1 - x2)) ** 2 + (Math.abs(y1 - y2)) ** 2))
 }
 const movePuppy = () => {
-    let distance = calcDistance(myGreyhound.loc.x, npObjects[0].locx, myGreyhound.loc.y, npObjects[0].locy)
+    if (myGreyhound.loc.map === 1) {
+        let distance = calcDistance(myGreyhound.loc.x, npObjects[0].loc.x, myGreyhound.loc.y, npObjects[0].loc.y)
 
-    if (distance > 1 && distance < 6) {
-        fillPointMap(npObjects[0].locy, npObjects[0].locx, map[npObjects[0].locy][npObjects[0].locx])
-        if (myGreyhound.loc.x > npObjects[0].locx) {
-            npObjects[0].locx++;
-        } else if (myGreyhound.loc.x < npObjects[0].locx) {
-            npObjects[0].locx--;
+        if (distance > 1 && distance < 6) {
+            fillPointMap(npObjects[0].loc.y, npObjects[0].loc.x, currentMap[npObjects[0].loc.y][npObjects[0].loc.x])
+            if (myGreyhound.loc.x > npObjects[0].loc.x) {
+                npObjects[0].loc.x++;
+            } else if (myGreyhound.loc.x < npObjects[0].loc.x) {
+                npObjects[0].loc.x--;
+            }
+            if (myGreyhound.loc.y > npObjects[0].loc.y) {
+                npObjects[0].loc.y++;
+            } else if (myGreyhound.loc.y < npObjects[0].loc.y) {
+                npObjects[0].loc.y--;
+            }
+            fillPointMap(npObjects[0].loc.y, npObjects[0].loc.x, npObjects[0].icon)
+            printMessage('this puppy really likes me')
         }
-        if (myGreyhound.loc.y > npObjects[0].locy) {
-            npObjects[0].locy++;
-        } else if (myGreyhound.loc.y < npObjects[0].locy) {
-            npObjects[0].locy--;
-        }
-        fillPointMap(npObjects[0].locy, npObjects[0].locx, npObjects[0].icon)
-        printMessage('this puppy really likes me')
-
     }
 }
 setInterval(moveCar, 250)
