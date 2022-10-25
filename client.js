@@ -1,33 +1,34 @@
 import fetch from 'node-fetch';
-import readlineSync from 'readline-sync'
+import { myGreyhound } from './cont.js';
 
-
-export const URI = 'http://localhost'
 export const PORT = 4002;
 
-//
+export const URI = `http://localhost:${PORT}`
+//export const URI = 'https://guarded-atoll-77874.herokuapp.com'
+
+
+// create new greyhound
 export const newGreyhoundPost = async () => {
-    const response = await fetch(`${URI}:${PORT}/greyhound`, {
+    const response = await fetch(`${URI}/greyhound`, {
         method: 'post',
         body: JSON.stringify(myGreyhound),
         headers: { 'Content-Type': 'application/json' }
     });
     const data = await response.text();
-
     return data;
 }
 
+//load existing greyhound
 export const loadGreyhoundGet = async (name) => {
-    const response = await fetch(`${URI}:${PORT}/greyhound?name=${name}`, {
+    const response = await fetch(`${URI}/greyhound?name=${name}`, {
         method: 'GET'
     })
     const data = await response.json();
-    //let pause = readlineSync.question("temp hold")
     return data;
 }
 
 export const updateOnline = async (update) => {
-    const response = await fetch(`${URI}:${PORT}/greyhound`, {
+    const response = await fetch(`${URI}/greyhound`, {
         method: 'PATCH',
         body: JSON.stringify(update),
         headers: { 'Content-Type': 'application/json' }
@@ -37,7 +38,7 @@ export const updateOnline = async (update) => {
 }
 
 export const saveGreyhoundPut = async () => {
-    const response = await fetch(`${URI}:${PORT}/greyhound`, {
+    const response = await fetch(`${URI}/greyhound`, {
         method: 'PUT',
         body: JSON.stringify(myGreyhound),
         headers: { 'Content-Type': 'application/json' }
@@ -45,3 +46,6 @@ export const saveGreyhoundPut = async () => {
     const data = await response.text();
     return data
 }
+
+
+

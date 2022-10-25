@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer } from './map.js';
+import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision } from './map.js';
 import cfonts from 'cfonts';
 import { myGreyhound, npObjects, map } from "./cont.js"
 import { menu } from './menu.js';
@@ -29,6 +29,7 @@ const turnOnKeypress = () => {
     readline.emitKeypressEvents(stdin);
     stdin.setRawMode(true);
     stdin.setEncoding('utf8');
+
     stdin.on('keypress', (str, key) => {
         if (key.ctrl && key.name === 'c') {
             showCursor();
@@ -62,6 +63,9 @@ const turnOnKeypress = () => {
                 break;
             case '4':
                 doCurrentAction(4)
+                break;
+            case '0':
+                console.log(collision('right'))
                 break;
         }
         locCompare();

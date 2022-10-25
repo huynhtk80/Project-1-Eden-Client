@@ -1,14 +1,7 @@
-import { PORT, updateOnline, URI } from './client.js';
-import { BOX, myGreyhound, npObjects, map } from './cont.js';
+import { updateOnline } from './client.js';
+import { BOX, myGreyhound, npObjects, map, sleep } from './cont.js';
 import { locCompare, printCurrentActions } from './event.js';
 const { stdin, stdout } = process;
-
-
-
-
-
-
-
 
 const columns = 50
 const rows = 20;
@@ -34,23 +27,6 @@ export const fillPointMap = (r, c, char) => {
 
 export const clearPointsMap = (a, b) => fillPointMap(a, b, ' ');
 
-// export const drawDog = () => {
-//     let edenImage = [
-//         '            /)-_-(\\        /)-_-(\\',
-//         "             (o o)          (o o)'",
-//         '     .-----__/\\o/            \\o/\\__-----.',
-//         '    /  __      /              \\      __  \\',
-//         '\\__/\\ /  \\_\\ |/                \\| /_/  \\ /\\__/',
-//         '     \\\\     ||                  ||      \\\\',
-//         '     //     ||                  ||      //',
-//         '     |\\     |\\                  /|     /|']
-
-//     for (let x = 2; x <= edenImage.length + 1; x++) {
-//         cursorTo(x, 2)
-//         output(edenImage[x - 2])
-//     }
-// }
-
 export const drawMap = () => {
 
     for (let x = 0; x < map.length; x++) {
@@ -59,7 +35,6 @@ export const drawMap = () => {
         }
     }
 }
-
 
 export const drawActions = () => {
     cursorTo(16, 56);
@@ -119,10 +94,87 @@ export const populateNP = () => {
     }
 }
 
+let rest = false;
+const tired = () => {
+    if (myGreyhound.CurStamina <= 0 && rest === false) {
+        rest = true
+        printMessage("I'm tired, lets take a break")
+        setTimeout(() => {
+            myGreyhound.CurStamina += 5;
+            updateStats()
+            rest = false;
+        }, 3000);
+    }
+}
+
+export const collision = (dir) => {
+    let col = false;
+    switch (dir) {
+        case 'up':
+            for (const npObject of npObjects) {
+
+                if (myGreyhound.loc.y - 1 === npObject.locy && myGreyhound.loc.x === npObject.locx) {
+                    col = true
+                }
+            }
+            for (const online of lastOnline) {
+                if (myGreyhound.loc.y - 1 === online.loc.y && myGreyhound.loc.x === online.loc.x) {
+                    col = true
+                }
+            }
+            break;
+        case 'down':
+            for (const npObject of npObjects) {
+                if (myGreyhound.loc.y + 1 === npObject.locy && myGreyhound.loc.x === npObject.locx) {
+                    col = true
+                }
+            }
+            for (const online of lastOnline) {
+                if (myGreyhound.loc.y + 1 === online.loc.y && myGreyhound.loc.x === online.loc.x) {
+                    col = true
+                }
+            }
+            break;
+        case 'left':
+            for (const npObject of npObjects) {
+                if (myGreyhound.loc.y === npObject.locy && myGreyhound.loc.x - 1 === npObject.locx) {
+                    col = true
+                }
+            }
+            for (const online of lastOnline) {
+                if (myGreyhound.loc.y === online.loc.y && myGreyhound.loc.x - 1 === online.loc.x) {
+                    col = true
+                }
+            }
+            break;
+        case 'right':
+            for (const npObject of npObjects) {
+                //console.log(`Ex= ${myGreyhound.loc.x}, name: ${npObject.name}, x=${npObject.locx}`)
+                if (myGreyhound.loc.y === npObject.locy && myGreyhound.loc.x + 1 === npObject.locx) {
+                    col = true
+                }
+
+            }
+            for (const online of lastOnline) {
+                if (myGreyhound.loc.y === online.loc.y && myGreyhound.loc.x + 1 === online.loc.x) {
+                    col = true
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    return col
+}
 
 export const moveUp = () => {
+
+    tired()
+
+
     fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.y > 0) {
+    if (myGreyhound.loc.y > 0 && rest === false && collision('up') === false) {
         myGreyhound.loc.y--;
         draindown();
     }
@@ -131,18 +183,21 @@ export const moveUp = () => {
 }
 
 export const moveRight = () => {
+    tired()
+
     fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.x < map[0].length - 1) {
+    if (myGreyhound.loc.x < map[0].length - 1 && rest === false && collision('right') === false) {
         myGreyhound.loc.x++
         draindown();
     }
     fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, myGreyhound.icon)
-
 }
 
 export const moveDown = () => {
+    tired()
+
     fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.y < map.length - 1) {
+    if (myGreyhound.loc.y < map.length - 1 && rest === false && collision('down') === false) {
         myGreyhound.loc.y++
         draindown();
     }
@@ -151,8 +206,10 @@ export const moveDown = () => {
 }
 
 export const moveLeft = () => {
+    tired()
+
     fillPointMap(myGreyhound.loc.y, myGreyhound.loc.x, map[myGreyhound.loc.y][myGreyhound.loc.x])
-    if (myGreyhound.loc.x > 0) {
+    if (myGreyhound.loc.x > 0 && rest === false && collision('left') === false) {
         myGreyhound.loc.x--
         draindown();
     }
@@ -163,13 +220,16 @@ export const moveLeft = () => {
 export const updateStats = () => {
     cursorTo(21, 2)
     output(`Stamina: ${myGreyhound.CurStamina} / ${myGreyhound.maxStamina} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
+    cursorTo(22, 2)
+    output(`Exp Points: ${myGreyhound.experience} | Level: ${myGreyhound.level} lvl`)
 }
 
 export const draindown = () => {
-    ///To Do need to add if statement limits
-    myGreyhound.CurStamina--;
-    myGreyhound.hunger = myGreyhound.hunger + 0.25;
-    myGreyhound.thirsty = myGreyhound.thirsty + 0.75
+    ///To-Do need to add if statement limits
+    if (myGreyhound.CurStamina > 0) { myGreyhound.CurStamina--; }
+    if (myGreyhound.hunger < 100) myGreyhound.hunger = myGreyhound.hunger + 0.25;
+    if (myGreyhound.thirsty < 100) myGreyhound.thirsty = myGreyhound.thirsty + 0.75
+    if (myGreyhound.thirsty < 100 && myGreyhound.bladder < 100) myGreyhound.bladder += 0.5
     myGreyhound.lastOnline = Date.now()
     myGreyhound.online = true;
 }
@@ -201,20 +261,6 @@ export const initGame = () => {
     printCurrentActions();
     populateNP()
 }
-//     __    __
-//     \/----\/
-//      \0  0/    WOOF!
-//      _\  /_
-//    _|  \/  |_
-//   | | |  | | |
-//  _| | |  | | |_
-// "---|_|--|_|---"
-
-//             .--~~,__
-// :-....,-------`~~'._.'
-//  `-,,,  ,_      ;'~U'
-//   _,-' ,'`-__; '--.
-//  (_/'~~      ''''(;
 
 
 let lastOnline = [];

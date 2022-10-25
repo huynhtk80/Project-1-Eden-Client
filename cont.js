@@ -123,3 +123,38 @@ export const map =
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w],
     [g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, g, w, w, w, w, w, w, w, w, w, w]
     ]
+
+
+export const sleep = ms => new Promise(r => setTimeout(r, ms));
+    //     __    __
+//     \/----\/
+//      \0  0/    WOOF!
+//      _\  /_
+//    _|  \/  |_
+//   | | |  | | |
+//  _| | |  | | |_
+// "---|_|--|_|---"
+
+//             .--~~,__
+// :-....,-------`~~'._.'
+//  `-,,,  ,_      ;'~U'
+//   _,-' ,'`-__; '--.
+//  (_/'~~      ''''(;
+
+
+// export const drawDog = () => {
+//     let edenImage = [
+//         '            /)-_-(\\        /)-_-(\\',
+//         "             (o o)          (o o)'",
+//         '     .-----__/\\o/            \\o/\\__-----.',
+//         '    /  __      /              \\      __  \\',
+//         '\\__/\\ /  \\_\\ |/                \\| /_/  \\ /\\__/',
+//         '     \\\\     ||                  ||      \\\\',
+//         '     //     ||                  ||      //',
+//         '     |\\     |\\                  /|     /|']
+
+//     for (let x = 2; x <= edenImage.length + 1; x++) {
+//         cursorTo(x, 2)
+//         output(edenImage[x - 2])
+//     }
+// }

@@ -1,4 +1,4 @@
-import { PORT, saveGreyhoundPut, URI } from "./client.js";
+import { saveGreyhoundPut } from "./client.js";
 import { cursorTo, output, printMessage, printMessage2 } from "./map.js"
 import { mapObjects, myGreyhound, map } from './cont.js'
 
@@ -132,35 +132,41 @@ const eat = () => {
 }
 
 const pee = () => {
-    myGreyhound.bladder = 0;
-    switch (currentLocationName) {
-        case 'grass':
-            printMessage('Ahhh....Now this spot is mine!!')
-            myGreyhound.experience = myGreyhound.experience + 10;
-            break
-        case 'road':
-            printMessage('Ahhh... it\'s running onto my paws...oh wells')
-            break;
-        case 'home':
-            printMessage('Ahhh... relief... but somehow something feels wrong')
-            break;
-        case 'home bowl':
-            myGreyhound.hunger = 0;
+    if (myGreyhound.bladder > 25) {
+        myGreyhound.bladder = 0;
+        switch (currentLocationName) {
+            case 'grass':
+                printMessage('Ahhh....Now this spot is mine!!')
+                myGreyhound.experience = myGreyhound.experience + 10;
+                break
+            case 'road':
+                printMessage('Ahhh... it\'s running onto my paws...oh wells')
+                break;
+            case 'home':
+                printMessage('Ahhh... relief... but somehow something feels wrong')
+                break;
+            case 'home bowl':
+                myGreyhound.hunger = 0;
 
-            break;
-        default:
-            break;
-    }
+                break;
+            default:
+                break;
+        }
+    } else { printMessage('looks like i don\'t need to pee') }
 }
 
 const swim = () => {
 
-    printMessage('HELP!! HELP, I\can\'t swim!!')
+    printMessage('HELP!! HELP, I can\'t swim!!')
 
 }
 
 const drink = () => {
+    if (myGreyhound.bladder < 100 && myGreyhound.thirsty === 0) {
+        myGreyhound.bladder += 10
+    }
     myGreyhound.thirsty = 0;
+
     printMessage('Lap Lap Lap')
 
 }
