@@ -8,7 +8,7 @@ Client Side only
 
   To Download code via git hub
   
-  Run git clone git@github.com:huynhtk80/Project-1-Eden-Playground.git
+    Run git clone https://github.com/huynhtk80/Project-1-Eden-Client.git
   
   Install Dependencies
   
