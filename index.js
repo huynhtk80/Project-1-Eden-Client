@@ -86,7 +86,7 @@ cfonts.say('Eden\'s \nAdventure', {
     env: 'node'                 // define the environment cfonts is being executed in
 });
 await menu();
-await delay(2000)
+await delay(1000)
 initGame();
 turnOnKeypress();
 

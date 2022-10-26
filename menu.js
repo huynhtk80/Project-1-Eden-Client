@@ -3,6 +3,7 @@ import { loadGreyhoundGet, newGreyhoundPost } from './client.js';
 import { myGreyhound, templateObj } from './cont.js';
 import chalk from 'chalk';
 import { delay } from './index.js';
+import { clearScreen, cursorTo } from './map.js';
 
 export const menu = async () => {
     const MENUOPT = ['Adopt a New Greyhound', 'Load existing Greyhound', 'Help']
@@ -11,7 +12,21 @@ export const menu = async () => {
     switch (MENUOPT[index]) {
         case 'Adopt a New Greyhound':
             await newPlayer();
-
+            clearScreen()
+            cursorTo(2, 1)
+            console.log(`\n\nThank you for adopting ${chalk.green(myGreyhound.name)}\n`)
+            await delay(2000);
+            console.log(`It may take some time for ${chalk.green(myGreyhound.name)} to get used to retired life`)
+            console.log(`and adapt to your home environment.\n`)
+            await delay(2000)
+            console.log(`${chalk.green(myGreyhound.name)} can't wait to see her ${chalk.green('furEver Home')}\n`)
+            readlineSync.keyInPause(`Lets get Bring ${chalk.green(myGreyhound.name)} home`)
+            clearScreen()
+            cursorTo(5, 1)
+            console.log(`It's the next day....${chalk.green(myGreyhound.name)} is ready to explore.  She has fallen in love with her new ball!`)
+            await delay(2000)
+            console.log('But keeps losing it!!!')
+            await delay(2000)
             break;
         case 'Load existing Greyhound':
             await loadPlayer();
