@@ -1,5 +1,5 @@
 import { saveGreyhoundPut } from "./client.js";
-import { cursorTo, drawMap, fillPointMap, output, printMessage, printMessage2, updateStats } from "./map.js"
+import { cursorTo, drawMap, fillPointMap, output, populateNP, printMessage, printMessage2, updateStats } from "./map.js"
 import { mapObjects, myGreyhound, currentMap, ball1loc, ball2loc } from './cont.js'
 import { calcDistance } from "./index.js";
 
@@ -21,11 +21,12 @@ export const printCurrentActions = () => {
         console.log('do nothing')
     }
     let index = mapObjects.findIndex((n) => n.name === currentLocationName)
-
+    cursorTo(2, 51)
+    output(currentLocationName)
     for (let y = 0; y < mapObjects[index].actions.length; y++) {
-        cursorTo(2 + y * 2, 51)
+        cursorTo(4 + y * 2, 51)
         output(`[${y + 1}]`)
-        cursorTo(2 + y * 2, 54)
+        cursorTo(4 + y * 2, 54)
         output(mapObjects[index].actions[y])
     }
 }
@@ -41,7 +42,6 @@ const clearCurrentActions = () => {
 export const doCurrentAction = (keyp) => {
 
     let index = mapObjects.findIndex((n) => n.name === currentLocationName)
-    printMessage(`Keyp: ${keyp} Index ${index} action l: ${mapObjects[index].actions.length}`)
     if (keyp <= mapObjects[index].actions.length) {
         let keyedCurrentAction = mapObjects[index].actions[keyp - 1]
 
@@ -101,6 +101,7 @@ const gotomap = (map) => {
         updateStats();
         locCompare();
         printCurrentActions();
+        populateNP()
     } else {
         printMessage("you need to find your ball first")
     }
@@ -151,15 +152,16 @@ const smell = () => {
         if (balldis1 > 5) {
             printMessage2('Can\'t smell the ball!')
         } else if (balldis1 > 3) {
-            printMessage2('I can just start to smell it')
+            printMessage2('The ball is close')
         } else if (balldis1 >= 2) {
             printMessage2('The ball is really close!')
         } else if (balldis1 == 1) {
             printMessage2('its EXTREMELY close!')
         } else if (balldis1 === 0) {
+            expUp(25);
             printMessage2('you found the ball!!')
             myGreyhound.ball1 = true;
-            expUp(25);
+
         }
     }
 
@@ -175,9 +177,10 @@ const smell = () => {
             printMessage2('its EXTREMELY close!')
         }
         else if (balldis2 === 0) {
+            expUp(50)
             printMessage2('you found the ball!!')
             myGreyhound.ball2 = true;
-            expUp(50)
+
         }
     }
 }

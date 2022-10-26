@@ -1,7 +1,8 @@
 import readlineSync from 'readline-Sync'
 import { loadGreyhoundGet, newGreyhoundPost } from './client.js';
 import { myGreyhound, templateObj } from './cont.js';
-
+import chalk from 'chalk';
+import { delay } from './index.js';
 
 export const menu = async () => {
     const MENUOPT = ['Adopt a New Greyhound', 'Load existing Greyhound', 'Help']
@@ -10,15 +11,42 @@ export const menu = async () => {
     switch (MENUOPT[index]) {
         case 'Adopt a New Greyhound':
             await newPlayer();
-            console.log("adopt new")
+
             break;
         case 'Load existing Greyhound':
             await loadPlayer();
             console.log("loading greyhound")
             break;
+        case 'Help':
+            await help();
+            break;
     }
 }
 
+const help = async () => {
+    console.log('Greyhounds need your Help!!')
+    await delay(2000)
+    console.log('Tracks are closing across the US and the dogs have no where to go!')
+    await delay(2000)
+    console.log('Greyhounds, haven\'t spent much time living a normal life')
+    await delay(2000)
+    console.log('Help guild your greyhound and adapt to their retired life\n')
+    await delay(2000)
+    console.log('use your arrow keys (or WASD ) to move around the map')
+    console.log('number keys 1-4 will perform the displayed actions\n')
+    await delay(2000)
+    console.log(chalk.green('Objectives'))
+    console.log(chalk.blue('1. Keep your greyhound fed and happy'))
+    console.log(chalk.blue('2. Find the missing ball in each location'))
+    console.log(chalk.blue('   a. The smell command will help you locate and pick up balls'))
+    console.log(chalk.blue('3. Interact with the world and gain experience for your greyhound'))
+    console.log(chalk.blue('   a. As you level up you gain more access to new actions'))
+
+    readlineSync.keyInPause('Have Fun!!')
+
+    menu();
+
+}
 
 export const newPlayer = async () => {
     let name = readlineSync.question('What would you like to name your greyhound: ', { hideEchoBack: false, limit: /[\S\s]+[\S]+/, limitMessage: 'can not be blank' });
@@ -29,9 +57,9 @@ export const newPlayer = async () => {
     myGreyhound.icon = icon;
     myGreyhound.online = true;
     myGreyhound.lastOnline = Date.now();
-    console.log(myGreyhound.lastOnline)
+
     let result = await newGreyhoundPost();
-    console.log(result)
+
     if (result === 'try again') {
         console.log('GreyHound Name already Exist')
         await newPlayer();

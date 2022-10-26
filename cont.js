@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 export const BOX = {
-    TOP_LEFT_CORNER: chalk.bgGrey('\u250C'),
+    TOP_LEFT_CORNER: '\u250C',
     TOP_RIGHT_CORNER: '\u2510',
     BOTTOM_LEFT_CORNER: '\u2514',
     BOTTOM_RIGHT_CORNER: '\u2518',
@@ -20,10 +20,10 @@ const q = '\u2588'// wall
 const n = ' '// no man's land
 const d = chalk.red('\u2593')//door mat inside
 const m = chalk.blue('\u2593')//door mat outside
-const ctl = chalk.bgYellow('\u256d')//dog bed
-const ctr = chalk.bgYellow('\u256e')
-const cbr = chalk.bgYellow('\u256f')
-const cbl = chalk.bgYellow('\u2570')
+const ctl = chalk.bgMagenta('\u256d')//dog bed
+const ctr = chalk.bgMagenta('\u256e')
+const cbr = chalk.bgMagenta('\u256f')
+const cbl = chalk.bgMagenta('\u2570')
 
 export const mapObjects = [
     {
@@ -84,7 +84,7 @@ export const mapObjects = [
 
 ]
 
-export const ball1loc = { map: 0, x: 28, y: 11 }
+export const ball1loc = { map: 0, x: 32, y: 13 }
 export const ball2loc = { map: 1, x: 34, y: 17 }
 
 export let myGreyhound = {

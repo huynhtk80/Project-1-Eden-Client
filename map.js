@@ -1,6 +1,9 @@
-import { updateOnline } from './client.js';
+import { messagePost, updateOnline } from './client.js';
 import { BOX, myGreyhound, npObjects, currentMap, mapArr, mapObjects } from './cont.js';
 import { locCompare, printCurrentActions } from './event.js';
+import { calcDistance } from './index.js';
+import chalk from 'chalk';
+import readlineSync from 'readline-Sync'
 const { stdin, stdout } = process;
 
 const columns = 50
@@ -35,14 +38,6 @@ export const drawMap = () => {
         }
     }
 }
-// export const drawMap1 = () => {
-
-//     for (let x = 0; x < map0.length; x++) {
-//         for (let i = 0; i < map0[0].length; i++) {
-//             fillPointMap(x, i, map0[x][i])
-//         }
-//     }
-// }
 
 export const drawActions = () => {
     cursorTo(16, 56);
@@ -240,17 +235,19 @@ export const moveLeft = () => {
 
 }
 
+//update stat display
 export const updateStats = () => {
     cursorTo(21, 2)
-    output(`Stamina: ${Math.floor(myGreyhound.CurStamina)} / ${myGreyhound.maxStamina} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
+    output(`Name: ${chalk.green(myGreyhound.name)} | Hunger: ${Math.floor(myGreyhound.hunger)} % | Thirty: ${Math.floor(myGreyhound.thirsty)} % `)
     cursorTo(22, 2)
-    output(`Exp Points: ${myGreyhound.experience} | Level: ${myGreyhound.level} lvl`)
+    output(`Stamina: ${Math.floor(myGreyhound.CurStamina)} / ${myGreyhound.maxStamina} | Exp Points: ${myGreyhound.experience} | Level: ${myGreyhound.level} lvl`)
 }
 
+//changes stats on movement
 export const draindown = () => {
     ///To-Do need to add if statement limits
     if (myGreyhound.CurStamina > 0) { myGreyhound.CurStamina -= 0.5; }
-    if (myGreyhound.hunger < 100) myGreyhound.hunger = myGreyhound.hunger + 0.25;
+    if (myGreyhound.hunger < 100) myGreyhound.hunger = myGreyhound.hunger + 1;
     if (myGreyhound.thirsty < 100) myGreyhound.thirsty = myGreyhound.thirsty + 0.75
     if (myGreyhound.thirsty < 100 && myGreyhound.bladder < 100) myGreyhound.bladder += 0.5
     myGreyhound.lastOnline = Date.now()
@@ -288,6 +285,22 @@ export const initGame = () => {
 
 let lastOnline = [];
 
+export const messagePlayers = () => {
+    const canMessage = [];
+
+    for (let online of lastOnline) {
+        const dist = calcDistance(online.loc.x, myGreyhound.loc.x, online.loc.y, myGreyhound.loc.y)
+        if (dist < 2 && online.loc.map === myGreyhound.loc.map) {
+            online.sender = myGreyhound.name
+            online.message = `Woof... from ${myGreyhound.name}`
+            canMessage.push(online)
+        }
+    }
+    if (canMessage.length > 0) {
+        messagePost(canMessage)
+    }
+
+}
 export const updateOnlinePlayer = async () => {
     myGreyhound.online = true;
     myGreyhound.lastOnline = Date.now();

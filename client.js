@@ -3,8 +3,8 @@ import { myGreyhound } from './cont.js';
 
 export const PORT = 4002;
 
-export const URI = `http://localhost:${PORT}`
-//export const URI = 'https://guarded-atoll-77874.herokuapp.com'
+//export const URI = `http://localhost:${PORT}`
+export const URI = 'https://guarded-atoll-77874.herokuapp.com'
 
 
 // create new greyhound
@@ -47,5 +47,19 @@ export const saveGreyhoundPut = async () => {
     return data
 }
 
+export const messagePost = async (canMSG) => {
+    const response = await fetch(`${URI}/message`, {
+        method: 'post',
+        body: JSON.stringify(canMSG),
+        headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await response.text();
+    return data;
+}
 
+export const messageGet = async () => {
+    const response = await fetch(`${URI}/message?name=${myGreyhound.name}`);
+    const message = await response.text();
+    return message;
+}
 

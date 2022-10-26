@@ -1,29 +1,18 @@
 import * as readline from 'readline';
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision } from './map.js';
+import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision, messagePlayers } from './map.js';
 import cfonts from 'cfonts';
 import { myGreyhound, npObjects, currentMap } from "./cont.js"
 import { menu } from './menu.js';
+import { messageGet } from './client.js';
 
 const { stdin, stdout } = process;
 
 
-clearScreen();
-cfonts.say('Eden\'s \nAdventure', {
-    font: 'tiny',              // define the font face
-    align: 'center',              // define text alignment
-    colors: ['blue'],         // define all colors
-    background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
-    letterSpacing: 1,           // define letter spacing
-    lineHeight: 1,              // define the line height
-    space: true,                // define if the output text should have empty lines on top and on the bottom
-    maxLength: '0',             // define how many character can be on one line
-    gradient: ['blue', 'red'],            // define your two gradient colors
-    independentGradient: true, // define if you want to recalculate the gradient for each new line
-    transitionGradient: true,  // define if this is a transition between colors directly
-    env: 'node'                 // define the environment cfonts is being executed in
-});
 
+export const delay = ms => new Promise(r => setTimeout(r, ms));
+
+//key press logic and startup
 const turnOnKeypress = () => {
     stdin.resume();
     readline.emitKeypressEvents(stdin);
@@ -41,15 +30,19 @@ const turnOnKeypress = () => {
 
         switch (key.name) {
             case 'up':
+            case 'w':
                 moveUp();
                 break;
             case 'right':
+            case 'd':
                 moveRight();
                 break;
             case 'down':
+            case 's':
                 moveDown();
                 break;
             case 'left':
+            case 'a':
                 moveLeft();
                 break
             case '1':
@@ -64,8 +57,8 @@ const turnOnKeypress = () => {
             case '4':
                 doCurrentAction(4)
                 break;
-            case '0':
-                console.log(collision('right'))
+            case 'space':
+                messagePlayers();
                 break;
         }
         //console.log('x: ', myGreyhound.loc.x, ' y: ', myGreyhound.loc.y)
@@ -76,12 +69,24 @@ const turnOnKeypress = () => {
     });
 }
 
-
-
-// ==================== Game Map Start====================
-
+// Program Start
+clearScreen();
+cfonts.say('Eden\'s \nAdventure', {
+    font: 'tiny',              // define the font face
+    align: 'center',              // define text alignment
+    colors: ['blue'],         // define all colors
+    background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,           // define letter spacing
+    lineHeight: 1,              // define the line height
+    space: true,                // define if the output text should have empty lines on top and on the bottom
+    maxLength: '0',             // define how many character can be on one line
+    gradient: ['blue', 'red'],            // define your two gradient colors
+    independentGradient: true, // define if you want to recalculate the gradient for each new line
+    transitionGradient: true,  // define if this is a transition between colors directly
+    env: 'node'                 // define the environment cfonts is being executed in
+});
 await menu();
-
+await delay(2000)
 initGame();
 turnOnKeypress();
 
@@ -144,11 +149,20 @@ const movePuppy = () => {
         }
     }
 }
+
+const checkMsg = async () => {
+    const message = await messageGet();
+    if (message !== 'no messages') {
+        printMessage(message)
+    }
+
+}
 setInterval(moveCar, 250)
 setInterval(moveCar2, 200)
 setInterval(movePuppy, 500)
 
 setInterval(updateOnlinePlayer, 250)
+setInterval(checkMsg, 1000)
 
 
 
