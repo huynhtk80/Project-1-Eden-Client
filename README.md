@@ -30,4 +30,4 @@ Run Game
 - Recomended to expand window to full size to prevent text wraping, do not change window terminal size once game has started
 - in terminal run:
     
-    Node index.js
+      Run node index.js
