@@ -46,7 +46,7 @@ export const mapObjects = [
     {
         name: "home",
         icon: [h],
-        actions: ['smell', 'eat', 'pee']
+        actions: ['smell', 'bark', 'eat', 'pee']
     },
 
     {
@@ -68,7 +68,7 @@ export const mapObjects = [
     {
         name: "house floor",
         icon: [f],
-        actions: ['smell']
+        actions: ['smell', 'bark']
     },
     {
         name: "blank",

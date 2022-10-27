@@ -1,5 +1,5 @@
 import { saveGreyhoundPut } from "./client.js";
-import { cursorTo, drawMap, fillPointMap, output, populateNP, printMessage, printMessage2, updateStats } from "./map.js"
+import { cursorTo, drawMap, fillPointMap, messagePlayers, output, populateNP, printMessage, printMessage2, updateStats } from "./map.js"
 import { mapObjects, myGreyhound, currentMap, ball1loc, ball2loc } from './cont.js'
 import { calcDistance } from "./index.js";
 
@@ -104,6 +104,7 @@ const gotomap = (map) => {
         populateNP()
     } else {
         printMessage("you need to find your ball first")
+        printMessage2('Hint: follow your nose!!')
     }
 }
 const expUp = (num) => {
@@ -271,7 +272,7 @@ const sleep = async () => {
 
 const bark = () => {
     if (myGreyhound.level === 1) {
-        printMessage(`Too shy to bark`)
+        printMessage(`bar...k?!`)
     }
     if (myGreyhound.level === 2) {
         printMessage(`ruf....that was barely a bark`)
@@ -279,4 +280,5 @@ const bark = () => {
     if (myGreyhound.level === 3) {
         printMessage(`HOwlll.....`)
     }
+    messagePlayers();
 }

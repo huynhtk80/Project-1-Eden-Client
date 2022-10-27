@@ -1,6 +1,6 @@
 import * as readline from 'readline';
 import { doCurrentAction, locCompare, printCurrentActions } from './event.js';
-import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision, messagePlayers } from './map.js';
+import { clearScreen, cursorTo, showCursor, moveUp, moveRight, moveDown, moveLeft, initGame, updateStats, printMessage, fillPointMap, updateOnlinePlayer, collision, messagePlayers, printMessage2 } from './map.js';
 import cfonts from 'cfonts';
 import { myGreyhound, npObjects, currentMap } from "./cont.js"
 import { menu } from './menu.js';
@@ -153,7 +153,7 @@ const movePuppy = () => {
 const checkMsg = async () => {
     const message = await messageGet();
     if (message !== 'no messages') {
-        printMessage(message)
+        printMessage2(message)
     }
 
 }
