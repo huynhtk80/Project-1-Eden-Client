@@ -16,9 +16,11 @@ Client Side only
   
 
   Access Remote Host
+  
     - The code is set on default to run off a remote server, just run the gamae in and enjoy.
       
   Host Server Locally 
+  
     - Requires Downloading Project-1-Eden-Server from https://github.com/huynhtk80/Project-1-Eden-Server
     - access client.js file in client repository
     - uncomment URI http://localhost:4002
