@@ -15,15 +15,19 @@ Client Side only
     Run npm install
   
 
-  Host Server Locally Requires Downloading Project-1-Eden-Server from https://github.com/huynhtk80/Project-1-Eden-Server
-    -program is defaulted to run on http://localhost:4002
-  
   Access Remote Host
-    - access client.js file in repository
-    - comment out localhost URI
-    - Uncomment 'https://guarded-atoll-77874.herokuapp.com' URI
-    - due to current delay/bug in remote server comment out last line of code in index file
-      line 151: setInterval(updateOnlinePlayer, 250), this will disable being able to see other players but makes the game more stable.
+  
+    - The code is set on default to run off a remote server, just run the gamae in and enjoy.
+      
+  Host Server Locally 
+  
+    - Requires Downloading Project-1-Eden-Server from https://github.com/huynhtk80/Project-1-Eden-Server
+    - access client.js file in client repository
+    - uncomment URI http://localhost:4002
+    - comment out URI 'https://guarded-atoll-77874.herokuapp.com'
+    
+  
+
     
 Run Game
 --------
